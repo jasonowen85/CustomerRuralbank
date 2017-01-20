@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="right"
+            android:paddingLeft="8dp"
+            android:text="@string/supplier"
+            android:textSize="@dimen/text_size_15" />
+
+        <Spinner
+            android:id="@+id/again_supplier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:layout_marginRight="25dp"
+            android:spinnerMode="dropdown"
+            android:dropDownVerticalOffset="40dp"
+            android:textSize="@dimen/text_size_15">
+
+        </Spinner>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@color/gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="right"
+            android:paddingLeft="8dp"
+            android:text="@string/equipment"
+            android:textSize="@dimen/text_size_15" />
+
+        <Spinner
+            android:id="@+id/again_equipments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:layout_marginRight="25dp"
+            android:spinnerMode="dropdown"
+            android:dropDownVerticalOffset="40dp"
+            android:textSize="@dimen/text_size_15"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@color/gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="right"
+            android:paddingLeft="8dp"
+            android:text="@string/model"
+            android:textSize="@dimen/text_size_15" />
+
+        <Spinner
+            android:id="@+id/again_model"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="25dp"
+            android:paddingLeft="20dp"
+            android:spinnerMode="dropdown"
+            android:dropDownVerticalOffset="40dp"
+            android:textSize="@dimen/text_size_15"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+
+        android:layout_height="1dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@color/gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="right"
+            android:inputType="number"
+            android:paddingLeft="8dp"
+            android:text="@string/nummber"
+            android:textSize="@dimen/text_size_15" />
+
+        <EditText
+            android:id="@+id/again_nummber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/iforminput_bg"
+            android:inputType="number"
+            android:paddingLeft="20dp"
+            android:textSize="@dimen/text_size_15">
+        </EditText>
+    </LinearLayout>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@color/gray" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="right"
+            android:paddingLeft="8dp"
+            android:text="@string/note"
+            android:textSize="@dimen/text_size_15" />
+
+        <EditText
+            android:id="@+id/again_note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/iforminput_bg"
+            android:paddingLeft="20dp"
+            android:textSize="@dimen/text_size_15">
+        </EditText>
+    </LinearLayout>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@color/gray" />
+</LinearLayout>
+

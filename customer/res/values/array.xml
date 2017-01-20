@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="list">
+        <item>柜面外设</item>
+        <item>ATM</item>
+        <item>智能终端</item>
+        <item>自动终端</item>
+        <item>打印机</item>
+        <item>清分机</item>
+        <item>VTM</item>
+    </string-array>
+    <string-array name="bank">
+        <item>工商银行</item>
+        <item>建设银行</item>
+        <item>中国银行</item>
+    </string-array>
+    <string-array name="shebei">
+        <item>柜面设备</item>
+        <item>ATM</item>
+        <item>智能终端</item>
+    </string-array>
+    <string-array name="gongsi">
+        <item>南天东华</item>
+        <item>广电运通</item>
+    </string-array>
+    <string-array name="branch">
+        <item>深圳分行</item>
+        <item>广东分行</item>
+    </string-array>
+    <string-array name="shijian">
+        <item>时间</item>
+    </string-array>
+    <string-array name="baoxiuleixing">
+        <item>选择报修类型</item>
+        <item>上门现场维修</item>
+        <item>寄件返厂维修</item>
+    </string-array>
+ <string-array name="letter_list">
+        <item>↑</item>
+        <item>\@</item>
+        <item>\#</item>
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
+        <item>D</item>
+        <item>E</item>
+        <item>F</item>
+        <item>G</item>
+        <item>H</item>
+        <item>I</item>
+        <item>J</item>
+        <item>K</item>
+        <item>L</item>
+        <item>M</item>
+        <item>N</item>
+        <item>O</item>
+        <item>P</item>
+        <item>Q</item>
+        <item>R</item>
+        <item>S</item>
+        <item>T</item>
+        <item>U</item>
+        <item>V</item>
+        <item>W</item>
+        <item>X</item>
+        <item>Y</item>
+        <item>Z</item>
+    </string-array>
+
+    <string-array name="letter_list2">
+        <item>↑</item>
+        <item>\#</item>
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
+        <item>D</item>
+        <item>E</item>
+        <item>F</item>
+        <item>G</item>
+        <item>H</item>
+        <item>I</item>
+        <item>J</item>
+        <item>K</item>
+        <item>L</item>
+        <item>M</item>
+        <item>N</item>
+        <item>O</item>
+        <item>P</item>
+        <item>Q</item>
+        <item>R</item>
+        <item>S</item>
+        <item>T</item>
+        <item>U</item>
+        <item>V</item>
+        <item>W</item>
+        <item>X</item>
+        <item>Y</item>
+        <item>Z</item>
+    </string-array>
+</resources>

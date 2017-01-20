@@ -1,0 +1,10 @@
+.gradle/ 
+*.class
+*.apk
+bin/
+gen/
+.settings/
+proguard/
+build/
+.git/
+.idea/

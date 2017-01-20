@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:titleTextAppearance="@style/Toolbar.TitleText" />
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/bubble_padding_left"
+        >
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:text="星期三 2016-05-18"
+            android:textColor="@color/color_black_9b9a9a"
+            android:gravity="center_vertical"
+            android:drawablePadding="@dimen/bottom_component_margin_horizontal"
+            android:drawableLeft="@drawable/sign5"/>
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:gravity="center_vertical"
+            android:drawablePadding="@dimen/bottom_component_margin_horizontal"
+            android:layout_marginLeft="@dimen/bubble_padding_left"
+            android:text="当前时间:11:24"
+            android:textColor="@color/color_black_9b9a9a"
+            android:drawableLeft="@drawable/sign3"
+            />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/bubble_padding_left"
+        android:layout_marginRight="@dimen/bubble_padding_left"
+        >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="@color/color_black_c8c7cc" />
+
+        <com.baidu.mapapi.map.MapView
+            android:id="@+id/mapview_location"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_marginLeft="1dp"
+            android:clickable="true" />
+
+        <TextView
+            android:id="@+id/address_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/bubble_padding_left"
+            android:layout_marginLeft="@dimen/bubble_padding_left"
+            android:layout_marginRight="@dimen/bubble_padding_left"
+            android:layout_toRightOf="@id/mapview_location"
+            android:text="南头街道关口二路2栋"
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:id="@+id/address_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/mapview_location"
+            android:layout_marginTop="@dimen/message_bubble_basic_margin"
+            android:layout_marginLeft="@dimen/bubble_padding_left"
+            android:layout_marginRight="@dimen/bubble_padding_left"
+            android:layout_below="@id/address_1"
+            android:textColor="@color/color_black_9b9a9a"
+            android:text="广东省深圳市南山区南头街道关口二路2栋"
+            />
+
+        <TextView
+            android:id="@+id/address_just"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/mapview_location"
+            android:layout_marginTop="@dimen/bubble_padding_left"
+            android:layout_marginLeft="@dimen/bubble_padding_left"
+            android:layout_marginRight="@dimen/bubble_padding_left"
+            android:layout_below="@id/address_2"
+            android:textColor="@color/color_blue_00acee"
+            android:textSize="@dimen/text_size_20"
+            android:text="地点微调"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_below="@id/mapview_location"
+            android:background="@color/color_black_c8c7cc" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="160dp"
+            android:layout_alignParentLeft="true"
+            android:background="@color/color_black_c8c7cc" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="160dp"
+            android:layout_alignParentRight="true"
+            android:background="@color/color_black_c8c7cc" />
+    </RelativeLayout>
+
+
+    <com.netease.nim.uikit.common.ui.imageview.CircleImageView
+        android:id="@+id/address_sign_in"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/message_music_size"
+        android:src="@drawable/address_sign" />
+</LinearLayout>

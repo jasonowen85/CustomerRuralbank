@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <include
+        android:id="@+id/tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        layout="@layout/tab_item_view" />
+    <TextView
+        android:id="@+id/xian"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/white"
+        android:layout_below="@id/app_bar_layout"
+        />
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/xian"
+        android:layout_above="@id/tab"
+        android:visibility="gone"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/xian"
+        android:layout_above="@id/tab"
+        android:baselineAligned="false">
+
+        <ListView
+            android:id="@+id/classify_mainlist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="#fff"
+            android:cacheColorHint="#00000000"
+            android:divider="#fff"
+            android:dividerHeight="1px"
+            android:fastScrollEnabled="true"
+            android:listSelector="#00000000"
+            android:scrollbars="none" />
+
+        <ListView
+            android:id="@+id/classify_morelist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="#fff"
+            android:cacheColorHint="#00000000"
+            android:divider="#ffebebeb"
+            android:dividerHeight="1dp"
+            android:fastScrollEnabled="true"
+            android:listSelector="#00000000"
+            android:visibility="gone"
+            android:scrollbars="none" />
+
+        <ExpandableListView
+            android:id="@+id/expendlist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:cacheColorHint="#00000000"
+            android:divider="#ffebebeb"
+            android:dividerHeight="1dp"
+            android:childDivider="#ffebebeb"
+            >
+        </ExpandableListView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/xian"
+        android:layout_above="@id/tab"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+            <ProgressBar
+                android:id="@+id/loading"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="5dp"
+                style="?android:attr/progressBarStyleSmall" />
+
+            <TextView
+                android:id="@+id/more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="正在更新" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/loading_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="点击重新获取供应商列表"
+            android:textColor="@color/action_bar_black_title_color"
+            />
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:background="@color/gray"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="@string/workorder_tracking"
+            android:visibility="gone"
+            android:textSize="@dimen/text_size_17" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp" />
+
+
+        <LinearLayout
+            android:id="@+id/ll_workorder_tracking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingRight="16dp">
+
+            <com.grgbanking.ruralbank.common.util.widget.TimeLineView
+                android:id="@+id/tl_tracking_step"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                app:timelineCount="1"
+                app:timelineMarginTop="14dip"
+                android:visibility="gone"
+                app:timelineRadiusDistance="34dp" />
+
+            <com.grgbanking.ruralbank.common.util.widget.MyListView
+                android:id="@+id/list_tracking"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="16dp"
+                android:divider="@null"
+                android:layout_weight="1"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

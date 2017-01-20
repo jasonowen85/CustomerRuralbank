@@ -1,0 +1,148 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/b"
+        android:baselineAligned="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <fragment
+            android:id="@+id/dropbox_bank"
+            android:name="com.grgbanking.ruralbank.main.fragment.dropbox_bank_fragment"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="4" />
+
+        <fragment
+            android:id="@+id/dropbox_branch"
+            android:name="com.grgbanking.ruralbank.main.fragment.dropbox_branch_fragment"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="4" />
+
+        <fragment
+            android:id="@+id/dropbox_time"
+            android:name="com.grgbanking.ruralbank.main.fragment.dropbox_time_fragment"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="3" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:gravity="center">
+
+        <RelativeLayout style="@style/ButtomBar">
+
+            <ImageView
+                android:id="@+id/iv_maintenance"
+                style="@style/ButtomBarImgBtn"
+                android:src="@drawable/up1_2"
+                android:contentDescription="@string/app_name"
+                android:gravity="center" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/ButtomBar">
+
+            <ImageView
+                android:id="@+id/iv_confirmed"
+                style="@style/ButtomBarImgBtn"
+                android:contentDescription="@string/app_name"
+                android:gravity="center"
+                android:src="@drawable/up6" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/ButtomBar">
+
+            <ImageView
+                android:id="@+id/iv_evaluation"
+                style="@style/ButtomBarImgBtn"
+                android:contentDescription="@string/app_name"
+                android:gravity="center"
+                android:src="@drawable/up7" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/ButtomBar">
+
+            <ImageView
+                android:id="@+id/iv_history_workorder"
+                style="@style/ButtomBarImgBtn"
+                android:contentDescription="@string/app_name"
+                android:gravity="center"
+                android:src="@drawable/up5" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/grey2">
+
+        <ViewStub
+            android:id="@+id/viewstub_maintenance"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout="@layout/viewstub_maintenance" />
+
+<!--        <ViewStub
+            android:id="@+id/viewstub_have_in_hand"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout="@layout/viewstub_have_in_hand" />-->
+
+        <ViewStub
+            android:id="@+id/viewstub_confirmed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout="@layout/viewstub_confirmed" />
+
+        <ViewStub
+            android:id="@+id/viewstub_evaluation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout="@layout/viewstub_evaluation" />
+
+        <ViewStub
+            android:id="@+id/viewstub_history_workorder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout="@layout/viewstub_history_workorder" />
+
+    </FrameLayout>
+
+    <include layout="@layout/tab_item_view" />
+</LinearLayout>
