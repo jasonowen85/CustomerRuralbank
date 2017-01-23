@@ -97,4 +97,16 @@
         <item>Y</item>
         <item>Z</item>
     </string-array>
+
+    <string-array name="permissions">
+        <item>录音</item>
+        <item>手机号码</item>
+        <item>读取手机状态</item>
+        <item>打出电话</item>
+        <item>摄像头开启</item>
+        <item>访问位置</item>
+        <item>读取位置信息</item>
+        <item>读sd卡</item>
+        <item>写sd卡</item>
+    </string-array>
 </resources>

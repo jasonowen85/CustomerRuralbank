@@ -1,6 +1,7 @@
 package com.netease.nim.uikit.session.actions;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 
@@ -21,6 +22,7 @@ public abstract class BaseAction implements Serializable {
 
     private int titleId;
     protected Context context;
+    protected Fragment mFragment;
     private transient int index;
     private transient Container container;
 

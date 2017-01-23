@@ -1,14 +1,19 @@
 package com.netease.nim.uikit.session.fragment;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.grgbanking.ruralbank.R;
+import com.grgbanking.ruralbank.common.util.PermissionUtils;
 import com.netease.nim.uikit.common.fragment.TFragment;
+import com.netease.nim.uikit.common.util.log.LogUtil;
 import com.netease.nim.uikit.session.SessionCustomization;
 import com.netease.nim.uikit.session.actions.BaseAction;
 import com.netease.nim.uikit.session.actions.ImageAction;
@@ -50,6 +55,7 @@ public class MessageFragment extends TFragment implements ModuleProxy {
 
     // modules
     protected InputPanel inputPanel;
+    protected  VideoAction videoAction;
     protected MessageListPanel messageListPanel;
 
     @Override
@@ -124,6 +130,7 @@ public class MessageFragment extends TFragment implements ModuleProxy {
         if (inputPanel == null) {
             inputPanel = new InputPanel(container, rootView, getActionList());
             inputPanel.setCustomization(customization);
+            inputPanel.setFatherFragment(this);
         } else {
             inputPanel.reload(container, customization);
         }
@@ -175,6 +182,54 @@ public class MessageFragment extends TFragment implements ModuleProxy {
         }
     };
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        LogUtil.i(TAG, "权限结果回调。。。  权限名字= " + permissions[0].toString());
+        switch(requestCode) {
+            case PermissionUtils.CODE_RECORD_AUDIO:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    if (ContextCompat.checkSelfPermission(getActivity(), PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE) ==
+                            PackageManager.PERMISSION_DENIED) {
+                        PermissionUtils.confirmActivityPermission(getActivity(), new String[]{PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE},
+                                PermissionUtils.CODE_RECORD_AUDIO, getString(R.string.readSDcard), false);
+                    } else {//开始录音
+                        inputPanel.startRecordAudio();
+                    }
+                } else {
+                    if (ContextCompat.checkSelfPermission(getActivity(), PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE) ==
+                            PackageManager.PERMISSION_DENIED) {
+                        //重新申请 sd 录音权限
+                        PermissionUtils.confirmActivityPermission(getActivity(), permissions, PermissionUtils.CODE_RECORD_AUDIO, getString(R.string.recordAudio), false);
+                    } else {
+                        //只申请  录音权限
+                        PermissionUtils.confirmActivityPermission(getActivity(), new String[]{PermissionUtils.PERMISSION_RECORD_AUDIO},
+                                PermissionUtils.CODE_RECORD_AUDIO, getString(R.string.recordAudio), false);
+                    }
+                }
+                break;
+
+            case PermissionUtils.CODE_CAMERA:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //开始调用摄像头
+                    LogUtil.i(TAG, "摄像头权限申请 成功。。。  ");
+                    videoAction.requestPermissionCarame(true);
+                } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {//第一次点击拒绝授权
+                    PermissionUtils.confirmFragmentPermission(this, permissions, PermissionUtils.CODE_CAMERA, getString(R.string.camera));
+                }
+                break;
+            case PermissionUtils.CODE_READ_EXTERNAL_STORAGE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //回调 执行true  调用摄像头功能；
+                    videoAction.requestPermissionSDcard(true);
+                } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {//第一次点击拒绝授权
+                    PermissionUtils.confirmFragmentPermission(this, permissions, PermissionUtils.CODE_READ_EXTERNAL_STORAGE, getString(R.string.readSDcard));
+                }
+                break;
+        }
+
+
+    }
 
     /**
      * ********************** implements ModuleProxy *********************
@@ -220,7 +275,8 @@ public class MessageFragment extends TFragment implements ModuleProxy {
     protected List<BaseAction> getActionList() {
         List<BaseAction> actions = new ArrayList<>();
         actions.add(new ImageAction());
-        actions.add(new VideoAction());
+        videoAction = new VideoAction(this);
+        actions.add(videoAction);
         actions.add(new WorkorderAction(getActivity()));
 
         if (customization != null && customization.actions != null) {

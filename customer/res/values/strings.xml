@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">运维服务客户端</string>
+    <string name="app_name">运服农商行</string>
     <string name="empty"></string>
     <string name="user_me">我的</string>
     <string name="feedback">意见反馈</string>
@@ -401,6 +401,17 @@
 
     <string name="help">常见问题</string>
     <string name="locus">活动轨迹</string>
+
+
+    <string name="helps">帮助</string>
+    <string name="quit">退出</string>
+    <string name="settings">设置</string>
+    <string name="string_help_text">权限没有被授权 无法正常使用 \n请点击 "设置"-"权限"-打开所需权限</string>
+    <string name="camera">相机</string>
+    <string name="recordAudio">录音</string>
+    <string name="callphone">打电话</string>
+    <string name="readSDcard">读取存储卡</string>
+    <string name="location">定位</string>
 
     <string name="address">地址: %1$s</string>
     <string name="supplier_phone">电话: %1$s</string>

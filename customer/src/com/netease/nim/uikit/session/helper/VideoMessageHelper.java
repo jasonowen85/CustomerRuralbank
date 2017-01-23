@@ -1,15 +1,20 @@
 package com.netease.nim.uikit.session.helper;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v13.app.FragmentCompat;
+import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import com.grgbanking.ruralbank.R;
+import com.grgbanking.ruralbank.common.util.PermissionUtils;
 import com.netease.nim.uikit.common.ui.dialog.CustomAlertDialog;
 import com.netease.nim.uikit.common.util.C;
 import com.netease.nim.uikit.common.util.file.AttachmentStore;
@@ -30,6 +35,7 @@ public class VideoMessageHelper {
     private String videoFilePath;
 
     private Activity activity;
+    private Fragment mFragment;
     private VideoMessageHelperListener listener;
 
     private int localRequestCode;
@@ -55,24 +61,46 @@ public class VideoMessageHelper {
         dialog.addItem("拍摄视频",new CustomAlertDialog.onSeparateItemClickListener(){
             @Override
             public void onClick() {
-                chooseVideoFromCamera();
+                if (Build.VERSION.SDK_INT >= 23) {
+                    //sd权限；
+                    if(ContextCompat.checkSelfPermission(activity, PermissionUtils.PERMISSION_CAMERA) ==
+                            PackageManager.PERMISSION_DENIED){
+                        FragmentCompat.requestPermissions(mFragment, new String[]{PermissionUtils.PERMISSION_CAMERA}, PermissionUtils.CODE_CAMERA);
+                    } else {
+                        chooseVideoFromCamera();
+                    }
+                } else {
+                    chooseVideoFromCamera();
+                }
             }
         });
         dialog.addItem("从相册中选择视频",new CustomAlertDialog.onSeparateItemClickListener() {
             @Override
             public void onClick() {
-                chooseVideoFromLocal();
+                if (Build.VERSION.SDK_INT >= 23) {
+                    //摄像头权限；
+                    if(ContextCompat.checkSelfPermission(activity, PermissionUtils.PERMISSION_READ_EXTERNAL_STORAGE) ==
+                            PackageManager.PERMISSION_DENIED){
+                        FragmentCompat.requestPermissions(mFragment, new String[]{PermissionUtils.PERMISSION_READ_EXTERNAL_STORAGE}, PermissionUtils.CODE_READ_EXTERNAL_STORAGE);
+                    } else {
+                        chooseVideoFromLocal();
+                    }
+                } else {
+                    chooseVideoFromLocal();
+                }
             }
         });
         dialog.show();
     }
-
+    public void setFragment(Fragment fragment){
+        this.mFragment = fragment;
+    }
     /************************************************* 视频操作S *******************************************/
 
     /**
      * 拍摄视频
      */
-    protected void chooseVideoFromCamera() {
+    public void chooseVideoFromCamera() {
         if (!StorageUtil.hasEnoughSpaceForWrite(activity,
                 StorageType.TYPE_VIDEO, true)) {
             return;
@@ -89,7 +117,7 @@ public class VideoMessageHelper {
     /**
      * 从本地相册中选择视频
      */
-    protected void chooseVideoFromLocal() {
+    public void chooseVideoFromLocal() {
         if (Build.VERSION.SDK_INT >= 19) {
             chooseVideoFromLocalKitKat();
         } else {

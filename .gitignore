@@ -1,6 +1,7 @@
 .gradle/ 
 *.class
 *.apk
+*.log
 bin/
 gen/
 .settings/

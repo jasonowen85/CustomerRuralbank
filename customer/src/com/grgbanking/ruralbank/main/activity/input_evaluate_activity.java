@@ -2,10 +2,14 @@ package com.grgbanking.ruralbank.main.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,6 +18,7 @@ import android.widget.Toast;
 
 import com.grgbanking.ruralbank.R;
 import com.grgbanking.ruralbank.api.ServerApi;
+import com.grgbanking.ruralbank.common.util.PermissionUtils;
 import com.grgbanking.ruralbank.config.preference.Preferences;
 import com.grgbanking.ruralbank.login.LoginActivity;
 import com.grgbanking.ruralbank.session.SessionHelper;
@@ -58,12 +63,12 @@ public class input_evaluate_activity extends UI implements View.OnClickListener 
 
     private void getParams() {
         jobOrderId = this.getIntent().getStringExtra("jobOrderId");
-        ServerApi.getEvaluate(jobOrderId,new JsonHttpResponseHandler(){
+        ServerApi.getEvaluate(jobOrderId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 String ret_code = null;
                 String ret_msg = null;
-                LogUtil.e("input_evaluate_activity",response.toString());
+                LogUtil.e("input_evaluate_activity", response.toString());
                 try {
                     ret_code = response.getString("ret_code");
                     ret_msg = response.getString("ret_msg");
@@ -127,8 +132,18 @@ public class input_evaluate_activity extends UI implements View.OnClickListener 
             @Override
             public void onClick(View v) {
                 if(supUserPhone!=null){
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+supUserPhone));
-                    startActivity(intent);
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        //打电话权限；
+                        if(ContextCompat.checkSelfPermission(input_evaluate_activity.this, PermissionUtils.PERMISSION_CALL_PHONE) ==
+                                PackageManager.PERMISSION_DENIED){
+                            ActivityCompat.requestPermissions(input_evaluate_activity.this,
+                                    new String[]{PermissionUtils.PERMISSION_CALL_PHONE}, PermissionUtils.CODE_CALL_PHONE);
+                        } else {
+                            callPhone(supUserPhone);
+                        }
+                    } else {
+                        callPhone(supUserPhone);
+                    }
                 }else{
                     Toast.makeText(mContext, "获取工程师信息失败", Toast.LENGTH_SHORT).show();
                 }
@@ -139,8 +154,18 @@ public class input_evaluate_activity extends UI implements View.OnClickListener 
             @Override
             public void onClick(View v) {
                 if(complaintCall!=null){
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+complaintCall));
-                    startActivity(intent);
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        //打电话权限；
+                        if(ContextCompat.checkSelfPermission(input_evaluate_activity.this, PermissionUtils.PERMISSION_CALL_PHONE) ==
+                                PackageManager.PERMISSION_DENIED){
+                            ActivityCompat.requestPermissions(input_evaluate_activity.this,
+                                    new String[]{PermissionUtils.PERMISSION_CALL_PHONE}, PermissionUtils.CODE_CALL_PHONE_2);
+                        } else {
+                            callPhone(complaintCall);
+                        }
+                    } else {
+                        callPhone(complaintCall);
+                    }
                 }else{
                     Toast.makeText(mContext, "获取客服信息失败", Toast.LENGTH_SHORT).show();
                 }
@@ -198,6 +223,34 @@ public class input_evaluate_activity extends UI implements View.OnClickListener 
         });
     }
 
+    private void callPhone(String phone){
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phone));
+        startActivity(intent);
+    }
+    @Override
+    public void onRequestPermissionsResult(int permsRequestCode, String[] permissions, int[] grantResults){
+        switch(permsRequestCode) {
+            case PermissionUtils.CODE_CALL_PHONE:
+                boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    callPhone(supUserPhone);
+                } else {
+                    PermissionUtils.confirmActivityPermission(this, new String[]{PermissionUtils.PERMISSION_RECORD_AUDIO},
+                            PermissionUtils.CODE_RECORD_AUDIO, getString(R.string.recordAudio), false);
+                }
+                break;
+
+            case PermissionUtils.CODE_CALL_PHONE_2:
+
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    callPhone(complaintCall);
+                } else {
+                    PermissionUtils.confirmActivityPermission(this, new String[]{PermissionUtils.PERMISSION_RECORD_AUDIO},
+                            PermissionUtils.CODE_RECORD_AUDIO, getString(R.string.recordAudio), false);
+                }
+                break;
+        }
+    }
     private void changeBg(boolean flag,TextView textView){
         Drawable img_on;
         Resources res = getResources();

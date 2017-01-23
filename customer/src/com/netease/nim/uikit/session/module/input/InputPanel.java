@@ -1,10 +1,16 @@
 package com.netease.nim.uikit.session.module.input;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.v13.app.FragmentCompat;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -26,6 +32,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.grgbanking.ruralbank.NimApplication;
+import com.grgbanking.ruralbank.common.util.PermissionUtils;
 import com.netease.nim.uikit.NimUIKit;
 import com.grgbanking.ruralbank.R;
 import com.netease.nim.uikit.common.ui.dialog.EasyAlertDialogHelper;
@@ -36,7 +43,9 @@ import com.netease.nim.uikit.session.actions.BaseAction;
 import com.netease.nim.uikit.session.emoji.EmoticonPickerView;
 import com.netease.nim.uikit.session.emoji.IEmoticonSelectedListener;
 import com.netease.nim.uikit.session.emoji.MoonUtil;
+import com.netease.nim.uikit.session.fragment.MessageFragment;
 import com.netease.nim.uikit.session.module.Container;
+import com.netease.nim.uikit.session.module.PermissionResult;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.media.record.AudioRecorder;
 import com.netease.nimlib.sdk.media.record.IAudioRecordCallback;
@@ -90,6 +99,7 @@ public class InputPanel implements IEmoticonSelectedListener, IAudioRecordCallba
     protected AudioRecorder audioMessageHelper;
     private Chronometer time;
     private TextView timerTip;
+    private Fragment mFragment;
     private LinearLayout timerTipContainer;
     private boolean started = false;
     private boolean cancelled = false;
@@ -117,6 +127,9 @@ public class InputPanel implements IEmoticonSelectedListener, IAudioRecordCallba
 
     public InputPanel(Container container, View view, List<BaseAction> actions) {
         this(container, view, actions, true);
+    }
+    public void setFatherFragment(MessageFragment fragment){
+        this.mFragment = fragment;
     }
 
     public void onPause() {
@@ -575,7 +588,23 @@ public class InputPanel implements IEmoticonSelectedListener, IAudioRecordCallba
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     touched = true;
                     initAudioRecord();
-                    onStartAudioRecord();
+
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        String[] needPermissions = new String[]{PermissionUtils.PERMISSION_RECORD_AUDIO, PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE};
+                        if (PermissionUtils.lacksPermissions(container.activity, needPermissions)) {
+                            if (PermissionUtils.lacksPermission(container.activity, PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE)) {
+                                FragmentCompat.requestPermissions(mFragment, needPermissions, PermissionUtils.CODE_RECORD_AUDIO);
+                            } else {
+                                FragmentCompat.requestPermissions(mFragment,
+                                        new String[]{PermissionUtils.PERMISSION_RECORD_AUDIO}, PermissionUtils.CODE_RECORD_AUDIO);
+                            }
+                        } else {
+                            onStartAudioRecord();
+                        }
+
+                    } else {
+                        onStartAudioRecord();
+                    }
                 } else if (event.getAction() == MotionEvent.ACTION_CANCEL
                         || event.getAction() == MotionEvent.ACTION_UP) {
                     touched = false;
@@ -589,6 +618,12 @@ public class InputPanel implements IEmoticonSelectedListener, IAudioRecordCallba
             }
         });
     }
+
+
+    public void startRecordAudio() {
+        onStartAudioRecord();
+    }
+
 
     // 上滑取消录音判断
     private static boolean isCancelled(View view, MotionEvent event) {

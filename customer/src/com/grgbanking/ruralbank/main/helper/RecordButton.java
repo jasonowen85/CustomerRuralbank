@@ -1,9 +1,14 @@
 package com.grgbanking.ruralbank.main.helper;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -16,7 +21,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.grgbanking.ruralbank.R;
+import com.grgbanking.ruralbank.common.util.PermissionUtils;
 import com.netease.nim.uikit.common.util.log.LogUtil;
+import com.netease.nim.uikit.session.module.PermissionResult;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -25,7 +32,7 @@ import java.lang.ref.WeakReference;
  * 录音专用Button，可弹出自定义的录音dialog。需要配合RecordButtonUtil使用
  *
  */
-public class RecordButton extends RelativeLayout {
+public class RecordButton extends RelativeLayout implements PermissionResult {
     private static final int MIN_INTERVAL_TIME = 900; // 录音最短时间(毫秒)
     private static final int MAX_INTERVAL_TIME = 60; // 录音最长时间（秒）
     private static final int HANDLE_FLAG = 33333721;// 用作massage的标示
@@ -38,6 +45,7 @@ public class RecordButton extends RelativeLayout {
     private int mRightButtonX = 0; // 右边界值（mImgDelete左值）
 
     private View bottomFlag;
+    private Activity mActivity;
     private View topFlag;
     private TextView mTvRecordTime;
     private ImageView mImgVolume;
@@ -55,16 +63,19 @@ public class RecordButton extends RelativeLayout {
 
     public RecordButton(Context context) {
         super(context);
+        mActivity = (Activity)context;
         init();
     }
 
     public RecordButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        mActivity = (Activity)context;
         init();
     }
 
     public RecordButton(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mActivity = (Activity)context;
         init();
     }
 
@@ -166,14 +177,23 @@ public class RecordButton extends RelativeLayout {
                 int x = (int) event.getX();
                 int y = (int) event.getY();
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    LogUtil.e("qzc","ACTION_DOWN");
-                    mImgPlay.startAnimation(clickAnimation(0.8f,
-                            400));
-                    initRecorder();
-                    bottomFlag.setVisibility(View.GONE);
-                    mTvRecordTime.setText("0\"");
-                    topFlag.setVisibility(View.VISIBLE);
-                    mTouchInPlayButton = true;
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        String[] needPermissions = new String[]{PermissionUtils.PERMISSION_RECORD_AUDIO, PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE};
+                        if(PermissionUtils.lacksPermissions(mActivity, needPermissions)){
+                            if(PermissionUtils.lacksPermission(mActivity, PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE)){
+                                ActivityCompat.requestPermissions(mActivity,needPermissions, PermissionUtils.CODE_RECORD_AUDIO);
+                            } else {
+                                ActivityCompat.requestPermissions(mActivity,
+                                        new String[]{PermissionUtils.PERMISSION_RECORD_AUDIO}, PermissionUtils.CODE_RECORD_AUDIO);
+                            }
+                        } else {
+                            startRecordAudio();
+                        }
+
+                    } else {
+                        startRecordAudio();
+                    }
+
                 }else if(event.getAction() == MotionEvent.ACTION_MOVE){
                     LogUtil.e("qzc","ACTION_MOVE"+x+"---y="+y+"--"+mImgPlay.getWidth()+"---"+mImgPlay.getHeight());
 
@@ -188,27 +208,44 @@ public class RecordButton extends RelativeLayout {
 //                        mLayout.setVisibility(GONE);
 //                    }
                 }else if(event.getAction() == MotionEvent.ACTION_UP){
-                    LogUtil.e("qzc","ACTION_UP");
-                    finishRecord();
-                    viewToInit();
-                    bottomFlag.setVisibility(View.VISIBLE);
-                    topFlag.setVisibility(View.GONE);
-                    mIsCancel = false;
-                    mTouchInPlayButton = false;
-                    mLayout.setVisibility(GONE);
+                    if(mTouchInPlayButton) {
+                        LogUtil.e("qzc","ACTION_UP");
+                        finishRecord();
+                        viewToInit();
+                        bottomFlag.setVisibility(View.VISIBLE);
+                        topFlag.setVisibility(View.GONE);
+                        mIsCancel = false;
+                        mTouchInPlayButton = false;
+                        mLayout.setVisibility(GONE);
+                    }
+
                 }else if(event.getAction() == MotionEvent.ACTION_CANCEL){
-                    LogUtil.e("qzc","ACTION_CANCEL");
-                    finishRecord();
-                    viewToInit();
-                    bottomFlag.setVisibility(View.VISIBLE);
-                    topFlag.setVisibility(View.GONE);
-                    mIsCancel = false;
-                    mTouchInPlayButton = false;
-                    mLayout.setVisibility(GONE);
+                    if(mTouchInPlayButton) {
+                        LogUtil.e("qzc","ACTION_CANCEL");
+                        finishRecord();
+                        viewToInit();
+                        bottomFlag.setVisibility(View.VISIBLE);
+                        topFlag.setVisibility(View.GONE);
+                        mIsCancel = false;
+                        mTouchInPlayButton = false;
+                        mLayout.setVisibility(GONE);
+                    }
+
                 }
                 return true;
             }
         });
+    }
+
+    private void startRecordAudio() {
+        LogUtil.e("qzc", "ACTION_DOWN");
+        mImgPlay.startAnimation(clickAnimation(0.8f,
+                400));
+        initRecorder();
+        bottomFlag.setVisibility(View.GONE);
+        mTvRecordTime.setText("0\"");
+        topFlag.setVisibility(View.VISIBLE);
+        mTouchInPlayButton = true;
     }
 
     private boolean moveEventWantToCancel(int x, int y) {
@@ -420,7 +457,23 @@ public class RecordButton extends RelativeLayout {
         mAudioUtil.setOnPlayListener(l);
     }
 
+    /**
+     * 处理录音被授权之后 的回调
+     */
+    @Override
+    public void requestPermissionAudio() {
+        startRecordAudio();
+    }
 
+    @Override
+    public void requestPermissionCarame(boolean isAllow) {
+
+    }
+
+    @Override
+    public void requestPermissionSDcard(boolean isAllow) {
+
+    }
 
     /******************************* inner class ****************************************/
 

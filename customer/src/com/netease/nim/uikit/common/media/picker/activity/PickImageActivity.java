@@ -4,15 +4,20 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.grgbanking.ruralbank.R;
+import com.grgbanking.ruralbank.common.util.PermissionUtils;
 import com.netease.nim.uikit.common.activity.UI;
 import com.netease.nim.uikit.common.media.picker.model.PhotoInfo;
 import com.netease.nim.uikit.common.media.picker.model.PickerContract;
@@ -94,9 +99,30 @@ public class PickImageActivity extends UI {
     private void processIntent() {
         int from = getIntent().getIntExtra(Extras.EXTRA_FROM, FROM_LOCAL);
         if (from == FROM_LOCAL) {
-            pickFromLocal();
+            if (Build.VERSION.SDK_INT >= 23) {
+                //读取sd卡权限；
+                if (ContextCompat.checkSelfPermission(this, PermissionUtils.PERMISSION_READ_EXTERNAL_STORAGE) ==
+                        PackageManager.PERMISSION_DENIED) {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{PermissionUtils.PERMISSION_READ_EXTERNAL_STORAGE}, PermissionUtils.CODE_READ_EXTERNAL_STORAGE);
+                } else {
+                    pickFromLocal();
+                }
+            } else {
+                pickFromLocal();
+            }
         } else {
-            pickFromCamera();
+            if (Build.VERSION.SDK_INT >= 23) {
+                if (ContextCompat.checkSelfPermission(this, PermissionUtils.PERMISSION_CAMERA) ==
+                        PackageManager.PERMISSION_DENIED) {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{PermissionUtils.PERMISSION_CAMERA}, PermissionUtils.CODE_CAMERA);
+                } else {
+                    pickFromCamera();
+                }
+            } else{
+                pickFromCamera();
+            }
         }
     }
 
@@ -137,6 +163,32 @@ public class PickImageActivity extends UI {
         } catch (Exception e) {
             Toast.makeText(this, R.string.sdcard_not_enough_head_error, Toast.LENGTH_LONG).show();
             finish();
+        }
+    }
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    @Override
+    public void onRequestPermissionsResult(int permsRequestCode, String[] permissions, int[] grantResults){
+        switch(permsRequestCode) {
+            case PermissionUtils.CODE_READ_EXTERNAL_STORAGE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    pickFromLocal();
+                } else {
+                    PermissionUtils.confirmActivityPermission(this,new String[]{PermissionUtils.PERMISSION_READ_EXTERNAL_STORAGE},
+                            PermissionUtils.CODE_READ_EXTERNAL_STORAGE, getString(R.string.readSDcard),true);
+                }
+                break;
+
+            case PermissionUtils.CODE_CAMERA:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    pickFromCamera();
+                } else {
+                    PermissionUtils.confirmActivityPermission(this,new String[]{PermissionUtils.PERMISSION_CAMERA},
+                            PermissionUtils.CODE_CAMERA, getString(R.string.camera), true);
+                }
+                break;
         }
     }
 

@@ -340,6 +340,16 @@ public class ListViewCompat extends ListView implements OnScrollListener {
 
     }
 
+    /**
+     * 下一页 没有新的数据了 也就是最后一页
+     */
+    public void setNoNextPagerDatas() {
+        isLoadFull = true;
+        loadFull.setVisibility(View.VISIBLE);
+        loading.setVisibility(View.GONE);
+        more.setVisibility(View.GONE);
+        noData.setVisibility(View.GONE);
+    }
     // 根据当前状态，调整header
     private void refreshHeaderViewByState() {
         switch (state) {

@@ -3,6 +3,7 @@ package com.grgbanking.ruralbank.main.activity;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
@@ -11,6 +12,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -42,6 +45,7 @@ import com.grgbanking.ruralbank.common.photo.utils.Bimp;
 import com.grgbanking.ruralbank.common.photo.utils.BitmapUtils;
 import com.grgbanking.ruralbank.common.photo.utils.FileUtils;
 import com.grgbanking.ruralbank.common.photo.view.NoScrollGridView;
+import com.grgbanking.ruralbank.common.util.PermissionUtils;
 import com.grgbanking.ruralbank.common.util.ToastUtils;
 import com.grgbanking.ruralbank.common.util.sys.ImageUtils;
 import com.grgbanking.ruralbank.config.preference.Preferences;
@@ -305,17 +309,45 @@ public class Addwork_order_Activity extends UI implements View.OnClickListener {
         menuWindow.showAtLocation(Addwork_order_Activity.this.findViewById(R.id.ll_first_my_fragment), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
     }
 
+
     private View.OnClickListener itemsOnClick = new View.OnClickListener() {
         public void onClick(View v) {
             menuWindow.dismiss();
             switch (v.getId()) {
                 case R.id.item_popupwindows_camera:        //点击拍照按钮
-                    goCamera();
+
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        if (ContextCompat.checkSelfPermission(Addwork_order_Activity.this, PermissionUtils.PERMISSION_CAMERA) ==
+                                PackageManager.PERMISSION_DENIED) {
+                            ActivityCompat.requestPermissions(Addwork_order_Activity.this,
+                                    new String[]{PermissionUtils.PERMISSION_CAMERA}, PermissionUtils.CODE_CAMERA);
+                        } else {
+                            goCamera();
+                        }
+                    } else {
+                        goCamera();
+                    }
+
+
                     break;
                 case R.id.item_popupwindows_Photo:       //点击从相册中选择按钮
-                    Intent intent = new Intent(instence,
-                            AlbumActivity.class);
-                    startActivity(intent);
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        //读取sd卡权限；
+                        if (ContextCompat.checkSelfPermission(Addwork_order_Activity.this, PermissionUtils.PERMISSION_READ_EXTERNAL_STORAGE) ==
+                                PackageManager.PERMISSION_DENIED) {
+                            ActivityCompat.requestPermissions(Addwork_order_Activity.this,
+                                    new String[]{PermissionUtils.PERMISSION_READ_EXTERNAL_STORAGE}, PermissionUtils.CODE_READ_EXTERNAL_STORAGE);
+                        } else {
+                            Intent intent = new Intent(instence,
+                                    AlbumActivity.class);
+                            startActivity(intent);
+                        }
+                    } else {
+                        Intent intent = new Intent(instence,
+                                AlbumActivity.class);
+                        startActivity(intent);
+                    }
+
                     break;
                 default:
                     break;
@@ -333,6 +365,61 @@ public class Addwork_order_Activity extends UI implements View.OnClickListener {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
         startActivityForResult(intent, TAKE_PICTURE);
     }
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    @Override
+    public void onRequestPermissionsResult(int permsRequestCode, String[] permissions, int[] grantResults){
+        LogUtil.d(TAG, "权限申请 回调 申请的permissions= " + permissions[0].toString());
+        switch(permsRequestCode) {
+            case PermissionUtils.CODE_RECORD_AUDIO:
+
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if(ContextCompat.checkSelfPermission(this, PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE) ==
+                            PackageManager.PERMISSION_DENIED){
+                        PermissionUtils.confirmActivityPermission(this, new String[]{PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE},
+                                PermissionUtils.CODE_RECORD_AUDIO, getString(R.string.readSDcard), false);
+                    } else {
+                        if(mBtnRecort != null)
+                            mBtnRecort.requestPermissionAudio();
+                    }
+
+                } else {
+                    if (ContextCompat.checkSelfPermission(this, PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE) ==
+                            PackageManager.PERMISSION_DENIED) {
+                        //重新申请 sd 录音权限
+                        PermissionUtils.confirmActivityPermission(this, permissions, PermissionUtils.CODE_RECORD_AUDIO, getString(R.string.recordAudio), false);
+                    } else {
+                        //只申请  录音权限
+                        PermissionUtils.confirmActivityPermission(this, new String[]{PermissionUtils.PERMISSION_RECORD_AUDIO},
+                                PermissionUtils.CODE_RECORD_AUDIO, getString(R.string.recordAudio), false);
+                    }
+                }
+
+                break;
+            case PermissionUtils.CODE_READ_EXTERNAL_STORAGE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(instence,
+                            AlbumActivity.class);
+                    startActivity(intent);
+                } else {
+                    PermissionUtils.confirmActivityPermission(this, new String[]{PermissionUtils.PERMISSION_READ_EXTERNAL_STORAGE},
+                            PermissionUtils.CODE_READ_EXTERNAL_STORAGE, getString(R.string.readSDcard), false);
+                }
+                break;
+
+            case PermissionUtils.CODE_CAMERA:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    goCamera();
+                } else {
+                    PermissionUtils.confirmActivityPermission(this, new String[]{PermissionUtils.PERMISSION_CAMERA},
+                            PermissionUtils.CODE_CAMERA, getString(R.string.camera), false);
+                }
+                break;
+        }
+    }
+
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {

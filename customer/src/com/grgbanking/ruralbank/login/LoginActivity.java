@@ -5,7 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -22,6 +24,7 @@ import com.grgbanking.ruralbank.DemoCache;
 import com.grgbanking.ruralbank.NimApplication;
 import com.grgbanking.ruralbank.R;
 import com.grgbanking.ruralbank.api.ServerApi;
+import com.grgbanking.ruralbank.common.util.PermissionUtils;
 import com.grgbanking.ruralbank.config.preference.Preferences;
 import com.grgbanking.ruralbank.config.preference.UserPreferences;
 import com.grgbanking.ruralbank.main.activity.ForgetpasswordActivity;
@@ -45,6 +48,9 @@ import com.netease.nimlib.sdk.auth.LoginInfo;
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 登录/注册界面
@@ -91,6 +97,19 @@ public class LoginActivity extends UI implements OnKeyListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
 
+        if (Build.VERSION.SDK_INT >= 23) {
+            if(PermissionUtils.lacksPermissions(this, PermissionUtils.requestPermissions)){
+                List<String> requestPermission = new ArrayList<String>();
+                for(String permission : PermissionUtils.requestPermissions){
+                    if(PermissionUtils.lacksPermission(this, permission)){
+                        requestPermission.add(permission);
+                    }
+                }
+                ActivityCompat.requestPermissions(this,
+                        requestPermission.toArray(new String[requestPermission.size()]), 1001); // 请求权限
+                requestPermission.clear();
+            }
+        }
         ToolBarOptions options = new ToolBarOptions();
         options.isNeedNavigate = false;
         options.logoId = R.drawable.actionbar_white_logo_space;

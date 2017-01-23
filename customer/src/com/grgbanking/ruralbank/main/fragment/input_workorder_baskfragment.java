@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -161,6 +162,8 @@ public class input_workorder_baskfragment extends BaseFragment implements
                 if (ret_code.equals("0")) {
                     JSONObject jsonObject = response.optJSONObject("lists");
                     JSONArray jsonArr = jsonObject.optJSONArray("lists");
+                    int totalItem = jsonObject.optInt("total");
+                    int totalPager = totalItem/10;
                     List<workOrder> orders = new ArrayList<workOrder>();
                     for (int i = 0; i < jsonArr.length(); i++) {
                         workOrder order = new workOrder();
@@ -205,7 +208,11 @@ public class input_workorder_baskfragment extends BaseFragment implements
                         datas.addAll(orders);
                         listView1.onLoadComplete();
                     }
-                    listView1.setResultSize(orders.size());
+                    if(totalPager == currentPage){
+                        listView1.setNoNextPagerDatas();
+                    } else {
+                        listView1.setResultSize(orders.size());
+                    }
                     mListAdapt.notifyDataSetChanged();
                     orders.clear();
                 } else {
@@ -614,6 +621,11 @@ public class input_workorder_baskfragment extends BaseFragment implements
             }
             return convertView;
         }
+    }
+
+    private void callPhone(String phone){
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
+        startActivity(intent);
     }
 
     /**
