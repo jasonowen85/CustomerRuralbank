@@ -462,7 +462,7 @@ public class RecordButton extends RelativeLayout implements PermissionResult {
      */
     @Override
     public void requestPermissionAudio() {
-        startRecordAudio();
+//        startRecordAudio();
     }
 
     @Override

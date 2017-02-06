@@ -194,7 +194,7 @@ public class MessageFragment extends TFragment implements ModuleProxy {
                         PermissionUtils.confirmActivityPermission(getActivity(), new String[]{PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE},
                                 PermissionUtils.CODE_RECORD_AUDIO, getString(R.string.readSDcard), false);
                     } else {//开始录音
-                        inputPanel.startRecordAudio();
+//                        inputPanel.startRecordAudio();
                     }
                 } else {
                     if (ContextCompat.checkSelfPermission(getActivity(), PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE) ==
