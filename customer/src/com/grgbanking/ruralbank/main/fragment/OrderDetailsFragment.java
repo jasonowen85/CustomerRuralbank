@@ -68,7 +68,7 @@ public class OrderDetailsFragment extends Fragment {
     private ImageView iv_action2, iv_action1;
     private ImageView star1, star2, star3, star4, star5;
     private workOrder mWorkOrder;
-    private LinearLayout ll_express, ll_evaluate, ll_complete,ll_contact_address;
+    private LinearLayout ll_express, ll_evaluate, ll_complete, ll_contact_address;
     private TextView tv_complete, tv_line, tv_contact_phone, tv_therepair_name, tv_contact_address, tv_express, tv_courierNum, tv_evaluate;
     private int mOrderType = 0;//1 上门维修   2 寄件返修
 
@@ -172,7 +172,7 @@ public class OrderDetailsFragment extends Fragment {
 
     private void initData() {
         mOrderId = getActivity().getIntent().getStringExtra("mOrderId");
-        LogUtil.e("OrderDetailsFragment","mOrderId == " + mOrderId);
+        LogUtil.e("OrderDetailsFragment", "mOrderId == " + mOrderId);
         getOrderData();
     }
 
@@ -291,31 +291,46 @@ public class OrderDetailsFragment extends Fragment {
 
     private void playSound(File file) {
         if (file != null) {
-            player = new UPlayer(file.getPath(),
-                    new Handler() {
-                        @Override
-                        public void handleMessage(Message msg) {
-                            if (msg.what == 0) {
-                                startAnim();
-                            } else if (msg.what == 1) {
-                                if (drawable != null) {
-                                    drawable.stop();
-                                    details_ImgVolume.setBackgroundResource(R.drawable.icon_record);
-                                    details_ImgVolume.setBackgroundResource(R.drawable.audio_animations);
-                                }
-                            } else {
-                                if (drawable != null) {
-                                    drawable.stop();
-                                    details_ImgVolume.setBackgroundResource(R.drawable.icon_record);
-                                    details_ImgVolume.setBackgroundResource(R.drawable.audio_animations);
+            if(null == player) {
+                player = new UPlayer(file.getPath(),
+                        new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                if (msg.what == 0) {
+                                    startAnim();
+                                } else if (msg.what == 1) {
+                                    if (drawable != null) {
+                                        drawable.stop();
+                                        details_ImgVolume.setBackgroundResource(R.drawable.icon_record);
+                                        details_ImgVolume.setBackgroundResource(R.drawable.audio_animations);
+                                    }
+                                } else {
+                                    if (drawable != null) {
+                                        drawable.stop();
+                                        details_ImgVolume.setBackgroundResource(R.drawable.icon_record);
+                                        details_ImgVolume.setBackgroundResource(R.drawable.audio_animations);
+                                    }
                                 }
                             }
                         }
-                    }
-            );
-            player.start();
+                );
+                player.start();
+            } else if(player.getMediaPlayer().isPlaying()){
+                player.stop();
+                if (drawable != null) {
+                    drawable.stop();
+                    details_ImgVolume.setBackgroundResource(R.drawable.icon_record);
+                    details_ImgVolume.setBackgroundResource(R.drawable.audio_animations);
+                }
+//                player = null;
+            } else {
+                player.start(file.getPath());
+                startAnim();
+            }
         }
     }
+
+
 
     private void setButtons( String schedule) {
         if ( schedule.equals("3") || schedule.equals("4")) { //   --- 撤单

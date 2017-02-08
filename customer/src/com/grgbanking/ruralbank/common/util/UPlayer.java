@@ -42,6 +42,11 @@ public class UPlayer implements IVoiceManager, MediaPlayer.OnCompletionListener,
         return false;
     }
 
+    public void start(String path) {
+        this.path = path;
+        start();
+    }
+
     @Override
     public void onPrepared(MediaPlayer mp) {
         Message msg = mHandler.obtainMessage();
@@ -56,6 +61,7 @@ public class UPlayer implements IVoiceManager, MediaPlayer.OnCompletionListener,
         Message msg = mHandler.obtainMessage();
         msg.what = 1;
         mHandler.sendMessage(msg);
+        stop();
     }
 
     @Override
@@ -69,10 +75,13 @@ public class UPlayer implements IVoiceManager, MediaPlayer.OnCompletionListener,
 
     @Override
     public boolean stop() {
-        mPlayer.stop();
-        mPlayer.release();
-        mPlayer = null;
+        mPlayer.reset();
         return false;
     }
+
+    public MediaPlayer getMediaPlayer(){
+        return mPlayer;
+    }
+
 
 }
