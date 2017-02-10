@@ -105,22 +105,22 @@ public class ApiHttpClient {
 
     public static void post(String partUrl, AsyncHttpResponseHandler handler) {
         client.post(getAbsoluteApiUrl(partUrl), handler);
-        log(new StringBuilder("POST ").append(partUrl).toString());
+        log(new StringBuilder("POST ").append(getAbsoluteApiUrl(partUrl)).toString());
     }
 
     public static void post(String partUrl, RequestParams params, AsyncHttpResponseHandler handler) {
         client.post(getAbsoluteApiUrl(partUrl), params, handler);
-        log(new StringBuilder("POST ").append(partUrl).append("&").append(params).toString());
+        log(new StringBuilder("POST ").append(getAbsoluteApiUrl(partUrl)).append("?").append(params).toString());
     }
 
     public static void post2(String partUrl, RequestParams params, AsyncHttpResponseHandler handler) {
         client.post(getAbsoluteApiUrl2(partUrl), params, handler);
-        log(new StringBuilder("POST ").append(partUrl).append("&").append(params).toString());
+        log(new StringBuilder("POST ").append(getAbsoluteApiUrl(partUrl)).append("?").append(params).toString());
     }
 
     public static void post(String partUrl, HttpEntity entity, AsyncHttpResponseHandler handler) {
         client.post(null, getAbsoluteApiUrl(partUrl), entity, null, handler);
-        log(new StringBuilder("POST ").append(partUrl).append("&").append(entity).toString());
+        log(new StringBuilder("POST ").append(getAbsoluteApiUrl(partUrl)).append("?").append(entity).toString());
     }
 
     public static void postDirect(String url, RequestParams params, AsyncHttpResponseHandler handler) {
