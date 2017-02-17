@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         app:tabTextColor="@color/grey"
         style="@style/MyCustomTabTextAppearance"
+        app:tabIndicatorColor="@color/color_blue_00aced"
         app:tabSelectedTextColor="@color/color_blue_00aced"
         />
 
@@ -614,7 +615,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@drawable/iforminput_bg"
-                        android:ems="10"
+                        android:ems="11"
                         android:gravity="center_vertical"
                         android:text="13849573849"
                         android:textSize="@dimen/text_size_15">
@@ -692,7 +693,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@drawable/iforminput_bg"
-                        android:ems="10"
+                        android:ems="18"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/text_size_15">
 

@@ -53,8 +53,7 @@
                         <TextView
                             android:layout_width="120dp"
                             android:layout_height="wrap_content"
-                            android:gravity="right"
-                            android:paddingLeft="8dp"
+                            android:paddingLeft="@dimen/margin_20dp"
                             android:text="@string/repairs_form"
                             android:textSize="@dimen/text_size_15" />
 
@@ -72,8 +71,8 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
-                        android:layout_marginLeft="25dp"
-                        android:layout_marginRight="25dp"
+                        android:layout_marginLeft="@dimen/margin_15dp"
+                        android:layout_marginRight="20dp"
                         android:background="@color/gray" />
 
                     <LinearLayout
@@ -84,8 +83,8 @@
                             android:layout_width="120dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:gravity="right"
-                            android:paddingLeft="8dp"
+                            android:gravity="left"
+                            android:paddingLeft="@dimen/margin_20dp"
                             android:text="@string/mailing_address"
                             android:textSize="@dimen/text_size_15" />
 
@@ -104,7 +103,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
-                        android:layout_marginLeft="25dp"
+                        android:layout_marginLeft="@dimen/margin_15dp"
                         android:layout_marginRight="25dp"
                         android:background="@color/gray" />
 
@@ -116,8 +115,9 @@
                             android:layout_width="120dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:gravity="right"
+                            android:gravity="left"
                             android:text="@string/repairs_contacts"
+                            android:paddingLeft="@dimen/margin_20dp"
                             android:textSize="@dimen/text_size_15" />
 
                         <EditText
@@ -137,7 +137,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
-                        android:layout_marginLeft="25dp"
+                        android:layout_marginLeft="@dimen/margin_15dp"
                         android:layout_marginRight="25dp"
                         android:background="@color/gray" />
 
@@ -149,8 +149,8 @@
                             android:layout_width="120dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:gravity="right"
-                            android:paddingLeft="8dp"
+                            android:gravity="left"
+                            android:paddingLeft="@dimen/margin_20dp"
                             android:text="@string/contact_number"
                             android:textSize="@dimen/text_size_15" />
 
@@ -202,8 +202,8 @@
                             android:layout_width="120dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:gravity="right"
-                            android:paddingLeft="8dp"
+                            android:gravity="left"
+                            android:paddingLeft="@dimen/margin_20dp"
                             android:text="@string/equipment"
                             android:textSize="@dimen/text_size_15" />
 
@@ -221,7 +221,7 @@
                         android:id="@+id/textView3"
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
-                        android:layout_marginLeft="25dp"
+                        android:layout_marginLeft="@dimen/margin_15dp"
                         android:layout_marginRight="25dp"
                         android:background="@color/gray" />
 
@@ -233,8 +233,8 @@
                             android:layout_width="120dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:gravity="right"
-                            android:paddingLeft="8dp"
+                            android:gravity="left"
+                            android:paddingLeft="@dimen/margin_20dp"
                             android:text="@string/supplier"
                             android:textSize="@dimen/text_size_15" />
 
@@ -252,7 +252,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
-                        android:layout_marginLeft="25dp"
+                        android:layout_marginLeft="@dimen/margin_15dp"
                         android:layout_marginRight="25dp"
                         android:background="@color/gray" />
 
@@ -264,8 +264,8 @@
                             android:layout_width="120dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:gravity="right"
-                            android:paddingLeft="8dp"
+                            android:gravity="left"
+                            android:paddingLeft="@dimen/margin_20dp"
                             android:text="@string/model"
                             android:textSize="@dimen/text_size_15" />
 
@@ -289,7 +289,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:layout_marginLeft="25dp"
+                            android:layout_marginLeft="@dimen/margin_15dp"
                             android:layout_marginRight="25dp"
                             android:background="@color/gray" />
 
@@ -301,8 +301,8 @@
                                 android:layout_width="120dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:gravity="right"
-                                android:paddingLeft="8dp"
+                                android:gravity="left"
+                                android:paddingLeft="@dimen/margin_20dp"
                                 android:text="@string/nummber"
                                 android:textSize="@dimen/text_size_15" />
 
@@ -313,6 +313,7 @@
                                 android:layout_gravity="center"
                                 android:background="@drawable/iforminput_bg"
                                 android:paddingLeft="20dp"
+                                android:inputType="number"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/text_size_15" />
                         </LinearLayout>
@@ -327,7 +328,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
-                        android:layout_marginLeft="25dp"
+                        android:layout_marginLeft="@dimen/margin_15dp"
                         android:layout_marginRight="25dp"
                         android:background="@color/gray" />
 
@@ -345,8 +346,8 @@
                                 android:layout_width="120dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:gravity="right"
-                                android:paddingLeft="8dp"
+                                android:gravity="left"
+                                android:paddingLeft="@dimen/margin_20dp"
                                 android:text="@string/note"
                                 android:textSize="@dimen/text_size_15" />
 
@@ -378,7 +379,8 @@
                                 android:layout_weight="6"
                                 android:background="@drawable/iforminput_bg"
                                 android:hint="描述一下机器故障情况"
-                                android:padding="8dp"
+                                android:paddingLeft="@dimen/margin_20dp"
+                                android:paddingTop="@dimen/margin_6dp"
                                 android:textColorHint="@color/color_hint_d9d9d9"
                                 android:textSize="@dimen/text_size_15" />
 

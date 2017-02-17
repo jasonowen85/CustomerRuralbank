@@ -77,7 +77,7 @@ public class DownloadService extends IntentService {
                 bytesum += byteread;
                 out.write(buffer, 0, byteread);
 
-                int progress = (int) (bytesum * 100L / bytetotal);
+                int progress = (int) (bytesum * 100.0 / bytetotal);
                 // 如果进度与之前进度相等，则不更新，如果更新太频繁，否则会造成界面卡顿
                 if (progress != oldProgress) {
                     updateProgress(progress);

@@ -2,7 +2,9 @@ package com.netease.nim.uikit.session.actions;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
+import com.grgbanking.ruralbank.NimApplication;
 import com.grgbanking.ruralbank.R;
 import com.grgbanking.ruralbank.api.ServerApi;
 import com.grgbanking.ruralbank.common.bean.userInfo;
@@ -32,7 +34,12 @@ public class WorkorderAction extends BaseAction {
     @Override
     public void onClick() {
         //TODO fengtangquan 参数传递
-        ServerApi.getUserInfo(getAccount(), new JsonHttpResponseHandler() {
+        String account = null;
+        if(!TextUtils.isEmpty(getAccount())&& getAccount().contains(NimApplication.sendApkName)){
+            account = getAccount().replaceAll(NimApplication.sendApkName, "");
+        }
+        LogUtil.e("jiang", "新报修 账号为： " + account) ;
+        ServerApi.getUserInfo(account, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 String ret_code = null;

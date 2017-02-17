@@ -10,6 +10,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +72,8 @@ public class OrderDetailsFragment extends Fragment {
     private LinearLayout ll_express, ll_evaluate, ll_complete, ll_contact_address;
     private TextView tv_complete, tv_line, tv_contact_phone, tv_therepair_name, tv_contact_address, tv_express, tv_courierNum, tv_evaluate;
     private int mOrderType = 0;//1 上门维修   2 寄件返修
+    //计算得到图片的间距 单位dp
+    private final  int PaddingIndance = 56;
 
     @Nullable
     @Override
@@ -91,6 +94,13 @@ public class OrderDetailsFragment extends Fragment {
     }
 
     private void initView() {
+        DisplayMetrics metric = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
+        float scale = getResources().getDisplayMetrics().density;
+        int width = (metric.widthPixels -  (int) (PaddingIndance * scale + 0.5f))/3 ;     // 屏幕宽度（像素）
+        int height = metric.heightPixels;
+        LogUtil.i(getTag(), "屏幕宽度/3 = " + width);
+
         iv_action2 = (ImageView) view.findViewById(R.id.iv_action2);
         iv_action1 = (ImageView) view.findViewById(R.id.iv_action1);
         star1 = (ImageView) view.findViewById(R.id.star1);
@@ -132,6 +142,11 @@ public class OrderDetailsFragment extends Fragment {
         iv_pictures[6] = iv_picture7;
         iv_pictures[7] = iv_picture8;
         iv_pictures[8] = iv_picture9;
+        LinearLayout.LayoutParams Params =  (LinearLayout.LayoutParams)iv_picture1.getLayoutParams();
+        Params.height = width;
+        for(ImageView iv : iv_pictures){
+            iv.setLayoutParams(Params);
+        }
         ImageView iv_picturecomplete1 = (ImageView) view.findViewById(R.id.iv_picturecomplete1);
         ImageView iv_picturecomplete2 = (ImageView) view.findViewById(R.id.iv_picturecomplete2);
         ImageView iv_picturecomplete3 = (ImageView) view.findViewById(R.id.iv_picturecomplete3);
@@ -151,6 +166,9 @@ public class OrderDetailsFragment extends Fragment {
         iv_picturecompletes[6] = iv_picturecomplete7;
         iv_picturecompletes[7] = iv_picturecomplete8;
         iv_picturecompletes[8] = iv_picturecomplete9;
+        for(ImageView iv : iv_picturecompletes){
+            iv.setLayoutParams(Params);
+        }
         tv_workorder_No = (TextView) view.findViewById(R.id.tv_workorder_no);//工单号
         tv_singleState = (TextView) view.findViewById(R.id.tv_singleState);//维修网点
         tv_repair_outlets = (TextView) view.findViewById(R.id.tv_repair_outlets);//工单进度操作
@@ -583,7 +601,7 @@ public class OrderDetailsFragment extends Fragment {
                             ll_express.setVisibility(View.VISIBLE);
                         }
                         if (jsonObj2.has("evaluate")) {
-                            tv_evaluate.setText(jsonObj2.getString("evaluate"));//工单号
+                            tv_evaluate.setText(jsonObj2.getString("evaluate").toString().replace("null", ""));//工单号
                             switch (jsonObj2.getInt("starLevel")) {
                                 case 1:
                                     star1.setImageResource(R.drawable.star2);

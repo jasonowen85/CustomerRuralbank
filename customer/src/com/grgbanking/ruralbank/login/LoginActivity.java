@@ -5,13 +5,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -70,6 +73,7 @@ public class LoginActivity extends UI implements OnKeyListener {
     private View loginLayout;
 
     private AbortableFuture<LoginInfo> loginRequest;
+    private boolean isShowDialog;
 
     public static void start(Context context) {
         start(context, false);
@@ -97,17 +101,25 @@ public class LoginActivity extends UI implements OnKeyListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
 
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            if(PermissionUtils.lacksPermissions(this, PermissionUtils.requestPermissions)){
+//                List<String> requestPermission = new ArrayList<String>();
+//                for(String permission : PermissionUtils.requestPermissions){
+//                    if(PermissionUtils.lacksPermission(this, permission)){
+//                        requestPermission.add(permission);
+//                    }
+//                }
+//                ActivityCompat.requestPermissions(this,
+//                        requestPermission.toArray(new String[requestPermission.size()]), 1001); // 请求权限
+//                requestPermission.clear();
+//            }
+//        }
         if (Build.VERSION.SDK_INT >= 23) {
-            if(PermissionUtils.lacksPermissions(this, PermissionUtils.requestPermissions)){
-                List<String> requestPermission = new ArrayList<String>();
-                for(String permission : PermissionUtils.requestPermissions){
-                    if(PermissionUtils.lacksPermission(this, permission)){
-                        requestPermission.add(permission);
-                    }
-                }
+            if (PermissionUtils.lacksPermission(this, PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE)) {
+                //缺少必要权限 不让用户登陆
                 ActivityCompat.requestPermissions(this,
-                        requestPermission.toArray(new String[requestPermission.size()]), 1001); // 请求权限
-                requestPermission.clear();
+                        new String[]{PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE}, PermissionUtils.CODE_READ_EXTERNAL_STORAGE); // 请求权限
+                isShowDialog = true;
             }
         }
         ToolBarOptions options = new ToolBarOptions();
@@ -120,6 +132,32 @@ public class LoginActivity extends UI implements OnKeyListener {
         setupLoginPanel();
     }
 
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    @Override
+    public void onRequestPermissionsResult(int permsRequestCode, String[] permissions, int[] grantResults){
+        switch(permsRequestCode) {
+            case PermissionUtils.CODE_READ_EXTERNAL_STORAGE:
+                isShowDialog = false;
+                if(grantResults.length >=1) {
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    } else {
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(this
+                                , permissions[0])) {//点击拒绝，再次弹出
+                            ActivityCompat.requestPermissions(this, permissions, PermissionUtils.CODE_READ_EXTERNAL_STORAGE);
+                            isShowDialog = true;
+                        } else if(!isShowDialog) { // 选择不再询问，并点击拒绝，弹出提示框
+                            Log.e("jiang", "toast" + "运行");
+                            showDialogPermission();
+                        }
+                    }
+                }
+                break;
+        }
+    }
     private void onParseIntent() {
         if (getIntent().getBooleanExtra(KICK_OUT, false)) {
             int type = NIMClient.getService(AuthService.class).getKickedClientType();
@@ -152,6 +190,30 @@ public class LoginActivity extends UI implements OnKeyListener {
         return super.onKeyDown(keyCode, event);
     }
 
+    private  void showDialogPermission() {
+        isShowDialog = true;
+        Log.e("jianglu", "马上显示dialog");
+        EasyAlertDialogHelper.createOkCancelDiolag(this, getString(R.string.helps),
+                getString(R.string.readSDcard) + getString(R.string.string_help_text),
+                getString(R.string.settings), getString(R.string.quit_apk), true, new EasyAlertDialogHelper.OnDialogActionListener() {
+                    @Override
+                    public void doCancelAction() {
+                        //返回上一个界面;
+                        Log.e("jianglu", "马上返回上一个界面 退出应用了");
+                        isShowDialog = false;
+                        finish();
+                    }
+
+                    @Override
+                    public void doOkAction() {
+                        //启动设置引导界面
+                        isShowDialog = false;
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        intent.setData(Uri.parse("package:" + LoginActivity.this.getPackageName()));
+                        startActivity(intent);
+                    }
+                }).show();
+    }
 
     /**
      * 登录面板

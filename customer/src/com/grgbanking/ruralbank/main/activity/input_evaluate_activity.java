@@ -235,8 +235,8 @@ public class input_evaluate_activity extends UI implements View.OnClickListener 
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     callPhone(supUserPhone);
                 } else {
-                    PermissionUtils.confirmActivityPermission(this, new String[]{PermissionUtils.PERMISSION_RECORD_AUDIO},
-                            PermissionUtils.CODE_RECORD_AUDIO, getString(R.string.recordAudio), false);
+                    PermissionUtils.confirmActivityPermission(this, new String[]{PermissionUtils.PERMISSION_CALL_PHONE},
+                            PermissionUtils.CODE_CALL_PHONE, getString(R.string.callphone), false);
                 }
                 break;
 
@@ -245,8 +245,8 @@ public class input_evaluate_activity extends UI implements View.OnClickListener 
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     callPhone(complaintCall);
                 } else {
-                    PermissionUtils.confirmActivityPermission(this, new String[]{PermissionUtils.PERMISSION_RECORD_AUDIO},
-                            PermissionUtils.CODE_RECORD_AUDIO, getString(R.string.recordAudio), false);
+                    PermissionUtils.confirmActivityPermission(this, new String[]{PermissionUtils.PERMISSION_CALL_PHONE},
+                            PermissionUtils.CODE_CALL_PHONE_2, getString(R.string.callphone), false);
                 }
                 break;
         }

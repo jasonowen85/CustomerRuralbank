@@ -5,12 +5,13 @@
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:gravity="center_vertical"
+        android:paddingTop="@dimen/margin_6dp"
+        android:paddingBottom="@dimen/margin_6dp"
         >
 
         <com.netease.nim.uikit.common.ui.imageview.HeadImageView
@@ -18,13 +19,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dip"
-            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true"
             android:src="@drawable/supplier_icon" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:layout_toRightOf="@id/iv_head_portrait"
+            android:layout_centerVertical="true"
             android:orientation="vertical">
 
             <TextView
@@ -55,7 +57,22 @@
                     android:textSize="@dimen/text_size_14" />
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_add_new_order"
+            android:layout_width="@dimen/height_btn_50dp"
+            android:layout_height="@dimen/btn_weight_30dp"
+            android:focusable="false"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/color_btn_selector"
+            android:textSize="@dimen/text_size_14"
+            android:layout_marginRight="@dimen/margin_10dp"
+            android:layout_marginLeft="@dimen/margin_10dp"
+            android:layout_marginTop="@dimen/message_bubble_basic_margin"
+            android:layout_marginBottom="@dimen/message_bubble_basic_margin"
+            android:background="@drawable/btn_add_order"
+            android:text="@string/add_new_order"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -70,4 +87,6 @@
             android:layout_height="wrap_content"
             android:visibility="gone" />
     </LinearLayout>
+
+
 </LinearLayout>

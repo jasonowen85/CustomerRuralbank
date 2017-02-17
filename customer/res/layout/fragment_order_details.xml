@@ -48,10 +48,10 @@
                 <TextView
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
-                    android:gravity="right|center_vertical"
-                    android:paddingLeft="20dp"
+                    android:gravity="left|center_vertical"
                     android:paddingRight="15dp"
                     android:text="@string/workorder_No"
+                    android:textColor="@color/gray"
                     android:textSize="@dimen/text_size_14" />
 
                 <TextView
@@ -62,6 +62,7 @@
                     android:background="@drawable/iforminput_bg"
                     android:ems="10"
                     android:gravity="center_vertical"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/text_size_14">
 
                     <requestFocus />
@@ -94,9 +95,10 @@
                 <TextView
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
-                    android:gravity="right|center_vertical"
+                    android:gravity="left|center_vertical"
                     android:paddingRight="15dp"
                     android:text="@string/repair_outlets"
+                    android:textColor="@color/gray"
                     android:textSize="@dimen/text_size_14" />
 
                 <TextView
@@ -107,6 +109,7 @@
                     android:background="@drawable/iforminput_bg"
                     android:ems="10"
                     android:gravity="center_vertical"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/text_size_14" />
 
             </LinearLayout>
@@ -127,8 +130,8 @@
                     android:id="@+id/textView7"
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
-                    android:gravity="right|center_vertical"
-                    android:paddingLeft="20dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/gray"
                     android:paddingRight="15dp"
                     android:text="@string/supplier"
                     android:textSize="@dimen/text_size_14" />
@@ -140,6 +143,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/iforminput_bg"
                     android:ems="10"
+                    android:textColor="@color/black"
                     android:gravity="center_vertical"
                     android:textSize="@dimen/text_size_14" />
             </LinearLayout>
@@ -160,8 +164,8 @@
                 <TextView
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
-                    android:gravity="right|center_vertical"
-                    android:paddingLeft="20dp"
+                    android:gravity="left|center_vertical"
+                   android:textColor="@color/gray"
                     android:paddingRight="15dp"
                     android:text="@string/equipment"
                     android:textSize="@dimen/text_size_14" />
@@ -173,6 +177,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/iforminput_bg"
                     android:ems="10"
+                    android:textColor="@color/black"
                     android:gravity="center_vertical"
                     android:textSize="@dimen/text_size_14" />
 
@@ -194,8 +199,8 @@
                     android:id="@+id/textView9"
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
-                    android:gravity="right|center_vertical"
-                    android:paddingLeft="20dp"
+                    android:gravity="left|center_vertical"
+                    android:textColor="@color/gray"
                     android:paddingRight="15dp"
                     android:text="@string/model"
                     android:textSize="@dimen/text_size_14" />
@@ -207,6 +212,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/iforminput_bg"
                     android:ems="10"
+                    android:textColor="@color/black"
                     android:gravity="center_vertical"
                     android:textSize="@dimen/text_size_14" />
             </LinearLayout>
@@ -227,10 +233,9 @@
                     android:id="@+id/textView10"
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
-                    android:gravity="right|center_vertical"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="15dp"
-
+                    android:gravity="left|center_vertical"
+                    android:paddingRight="@dimen/margin_15dp"
+                    android:textColor="@color/gray"
                     android:text="@string/note"
                     android:textSize="@dimen/text_size_14" />
 
@@ -241,6 +246,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/iforminput_bg"
                     android:ems="10"
+                    android:textColor="@color/black"
                     android:gravity="center_vertical"
                     android:textSize="@dimen/text_size_14" />
 
@@ -268,6 +274,7 @@
                 android:background="@drawable/iforminput_bg"
                 android:ems="10"
                 android:hint="故障情况"
+                android:textColor="@color/black"
                 android:textSize="@dimen/text_size_14" />
 
             <RelativeLayout
@@ -438,7 +445,8 @@
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:gravity="right|center_vertical"
+                    android:gravity="left|center_vertical"
+                    android:textColor="@color/gray"
                     android:paddingRight="15dp"
                     android:text="@string/therepair_name"
                     android:textSize="@dimen/text_size_14" />
@@ -450,6 +458,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/iforminput_bg"
                     android:ems="10"
+                    android:textColor="@color/black"
                     android:gravity="center_vertical"
                     android:text="张工"
                     android:textSize="@dimen/text_size_14">
@@ -474,9 +483,10 @@
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:gravity="right|center_vertical"
+                    android:gravity="left|center_vertical"
                     android:paddingRight="15dp"
                     android:text="联系地址"
+                    android:textColor="@color/gray"
                     android:textSize="@dimen/text_size_14" />
 
                 <TextView
@@ -486,6 +496,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/iforminput_bg"
                     android:ems="10"
+                    android:textColor="@color/black"
                     android:gravity="center_vertical"
                     android:textSize="@dimen/text_size_14">
 
@@ -509,8 +520,9 @@
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:gravity="right|center_vertical"
+                    android:gravity="left|center_vertical"
                     android:paddingRight="15dp"
+                    android:textColor="@color/gray"
                     android:text="@string/contact_phone"
                     android:textSize="@dimen/text_size_14" />
 
@@ -520,9 +532,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/iforminput_bg"
-                    android:ems="10"
+                    android:ems="11"
                     android:gravity="center_vertical"
                     android:text="13849573849"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/text_size_14">
 
                     <requestFocus />
@@ -548,12 +561,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp">
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:gravity="right|center_vertical"
+                    android:gravity="center_vertical"
                     android:paddingRight="15dp"
                     android:text="快递公司"
                     android:textSize="@dimen/text_size_14" />
@@ -565,9 +578,9 @@
                     android:layout_weight="1"
                     android:background="@drawable/iforminput_bg"
                     android:ems="10"
+                    android:textColor="@color/black"
                     android:gravity="center_vertical"
                     android:textSize="@dimen/text_size_14">
-
                     <requestFocus />
                 </TextView>
             </LinearLayout>
@@ -582,12 +595,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp">
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:gravity="right|center_vertical"
+                    android:gravity="center_vertical"
                     android:paddingRight="15dp"
                     android:text="快递单号"
                     android:textSize="@dimen/text_size_14" />
@@ -598,10 +611,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/iforminput_bg"
-                    android:ems="10"
+                    android:ems="18"
+                    android:textColor="@color/black"
                     android:gravity="center_vertical"
                     android:textSize="@dimen/text_size_14">
-
                     <requestFocus />
                 </TextView>
             </LinearLayout>
@@ -638,6 +651,7 @@
                     android:background="@drawable/iforminput_bg"
                     android:ems="10"
                     android:hint="完成情况"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/text_size_14" />
 
             </LinearLayout>
@@ -766,6 +780,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/iforminput_bg"
                     android:ems="10"
+                    android:textColor="@color/black"
                     android:gravity="center_vertical"
                     android:textSize="@dimen/text_size_14">
 
@@ -784,7 +799,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="评分"
-
+                    android:textColor="@color/black"
                     android:textSize="@dimen/text_size_14" />
 
                 <ImageView

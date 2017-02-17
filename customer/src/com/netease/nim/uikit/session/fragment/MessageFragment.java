@@ -188,7 +188,6 @@ public class MessageFragment extends TFragment implements ModuleProxy {
         switch(requestCode) {
             case PermissionUtils.CODE_RECORD_AUDIO:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
                     if (ContextCompat.checkSelfPermission(getActivity(), PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE) ==
                             PackageManager.PERMISSION_DENIED) {
                         PermissionUtils.confirmActivityPermission(getActivity(), new String[]{PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE},

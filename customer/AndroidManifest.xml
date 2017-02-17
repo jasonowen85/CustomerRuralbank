@@ -3,7 +3,7 @@
     package="com.grgbanking.ruralbank"
     android:installLocation="auto"
     android:versionCode="1"
-    android:versionName="1.0.0">
+    android:versionName="1.0.1">
 
     <!-- 加入应用需要的权限 -->
     <!-- 网络相关 -->
