@@ -693,9 +693,9 @@ public class OrderDetailsFragment extends Fragment {
                             tv_contact_phone.setText(jsonObj.getString("phone"));
                         }
 
-                        String schedule = jsonObj.getString("schedule");
-                        String state = jsonObj.getString("state");
-                        setButtons( schedule);
+//                        String schedule = jsonObj.getString("schedule");
+//                        String state = jsonObj.getString("state");
+//                        setButtons( schedule);
                         //getTrackingData();
                     } catch (JSONException e) {
                         e.printStackTrace();

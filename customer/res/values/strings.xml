@@ -415,6 +415,13 @@
     <string name="callphone">打电话</string>
     <string name="readSDcard">读取存储卡</string>
     <string name="location">定位</string>
+    <string name="cancle_order">撤单</string>
+    <string name="close_order">关闭工单</string>
+    <string name="confirm_receive">确认收货</string>
+    <string name="confirm_cancle_order">是否撤单</string>
+    <string name="confirm_close_order">是否关闭工单</string>
+    <string name="confirm_receive_goods">是否收到货物</string>
+    <string name="confirm_complete_order">是否完成设备维修</string>
 
     <string name="address">地址: %1$s</string>
     <string name="supplier_phone">电话: %1$s</string>

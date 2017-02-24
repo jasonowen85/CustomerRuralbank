@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
@@ -44,7 +45,14 @@ public class DownloadService extends IntentService {
         String appName = getString(getApplicationInfo().labelRes);
         int icon = getApplicationInfo().icon;
 
-        mBuilder.setContentTitle(appName).setSmallIcon(icon);
+        mBuilder.setContentTitle(appName)
+//                .setSmallIcon(icon)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo));
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            mBuilder.setSmallIcon(R.drawable.ic_small_log);
+        } else {
+            mBuilder.setSmallIcon(icon);
+        }
         String urlStr = intent.getStringExtra(Constants.APK_DOWNLOAD_URL);
         InputStream in = null;
         FileOutputStream out = null;

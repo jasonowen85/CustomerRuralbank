@@ -100,10 +100,13 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="margin_3dp">3dp</dimen>
+    <dimen name="margin_1dp">1dp</dimen>
     <dimen name="margin_6dp">6dp</dimen>
     <dimen name="margin_10dp">10dp</dimen>
     <dimen name="margin_15dp">15dp</dimen>
     <dimen name="margin_20dp">20dp</dimen>
+    <dimen name="margin_60dp">60dp</dimen>
+
     <dimen name="height_btn_50dp">50dp</dimen>
     <dimen name="btn_weight_30dp">30dp</dimen>
 

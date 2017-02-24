@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,15 +28,21 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.grgbanking.ruralbank.NimApplication;
 import com.grgbanking.ruralbank.R;
 import com.grgbanking.ruralbank.api.ServerApi;
 import com.grgbanking.ruralbank.common.bean.tracking;
 import com.grgbanking.ruralbank.common.bean.workOrder;
 import com.grgbanking.ruralbank.common.util.widget.TimeLineView;
+import com.grgbanking.ruralbank.config.preference.Preferences;
 import com.grgbanking.ruralbank.login.LoginActivity;
 import com.grgbanking.ruralbank.main.activity.LocusActivity;
+import com.grgbanking.ruralbank.main.activity.first_workorder_activity;
+import com.grgbanking.ruralbank.main.activity.input_courier_number_activity;
+import com.grgbanking.ruralbank.main.activity.input_evaluate_activity;
 import com.grgbanking.ruralbank.session.SessionHelper;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.netease.nim.uikit.common.ui.dialog.EasyAlertDialogHelper;
 import com.netease.nim.uikit.common.util.log.LogUtil;
 import com.netease.nim.uikit.common.util.string.StringUtil;
 
@@ -55,7 +62,7 @@ public class OrderStateFragment extends Fragment {
     private Context mContext;
     private View view;
     private String mOrderId;
-//    private ImageView iv_action2, iv_action1;
+    private ImageView iv_action2, iv_action1;
     private List<tracking> datas;
     private TimeLineView mTimeLineView;
     private ListAdapt mListAdapt;
@@ -68,7 +75,7 @@ public class OrderStateFragment extends Fragment {
     private LinearLayout ll_express, ll_evaluate, ll_complete;
     private LinearLayout ll_workorder_tracking, ll_contact_address;
     private TextView tv_complete, tv_line, tv_contact_phone, tv_therepair_name, tv_contact_address, tv_express, tv_courierNum, tv_evaluate;
-
+    private TextView tv_buttomLine;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,10 +88,11 @@ public class OrderStateFragment extends Fragment {
 
     private void initView() {
         //tweet_layout_record = view.findViewById(R.id.tweet_layout_record);
-//        iv_action2 = (ImageView) view.findViewById(R.id.iv_action2);
-//        iv_action1 = (ImageView) view.findViewById(R.id.iv_action1);
+        iv_action2 = (ImageView) view.findViewById(R.id.iv_action2);
+        iv_action1 = (ImageView) view.findViewById(R.id.iv_action1);
         mTimeLineView = (TimeLineView) view.findViewById(R.id.tl_tracking_step);
         mListView = (ListView) view.findViewById(R.id.list_tracking);
+        tv_buttomLine = (TextView) view.findViewById(R.id.tv_buttom_line);
 //        star1 = (ImageView) view.findViewById(R.id.star1);
 //        star2 = (ImageView) view.findViewById(R.id.star2);
 //        star3 = (ImageView) view.findViewById(R.id.star3);
@@ -117,374 +125,333 @@ public class OrderStateFragment extends Fragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(datas.get(Integer.parseInt(parent.getAdapter().getItem(position).toString())).getState().equals("14")){
-                    Intent intent = new Intent(mContext,LocusActivity.class);
+                if (datas.get(Integer.parseInt(parent.getAdapter().getItem(position).toString())).getState().equals("14")) {
+                    Intent intent = new Intent(mContext, LocusActivity.class);
                     intent.putExtra("jobOrderId", mOrderId);
                     startActivity(intent);
-                }else{
+                } else {
                     SessionHelper.startP2PSession(mContext, datas.get(Integer.parseInt(parent.getAdapter().getItem(position).toString())).getContactId());
                 }
             }
         });
         getTrackingData();
-        //getOrderData();
+        getOrderData();
     }
 
-//    private void setButtons( String schedule) {
-//        if ( schedule.equals("3") || schedule.equals("4")) { //   --- 撤单
-//            iv_action1.setVisibility(View.VISIBLE);
-//            iv_action1.setImageResource(R.drawable.button1);
-//            iv_action1.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    cancelOrder(mOrderId);
+    private void setButtons( String schedule) {
+        if ( schedule.equals("3") || schedule.equals("4")) { //   --- 撤单
+            iv_action1.setVisibility(View.VISIBLE);
+            iv_action1.setImageResource(R.drawable.button1);
+            iv_action1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    confirmCancelOrder(mOrderId);
 //                    iv_action1.setClickable(false);
-//                }
-//            });
-//        } else if (schedule.equals("11") || schedule.equals("1") ||schedule.equals("12") || schedule.equals("2")) {//撤单、录入快递单号
-//            iv_action1.setVisibility(View.VISIBLE);
-//            iv_action1.setImageResource(R.drawable.button1);
-//            if(mOrderType==2){
-//                if (mWorkOrder.getExpress() == null || mWorkOrder.getCourierNum() == null || mWorkOrder.getExpress().equals("") || mWorkOrder.getCourierNum().equals("")) {
-//                    iv_action2.setVisibility(View.VISIBLE);
-//                    iv_action2.setImageResource(R.drawable.button9);
-//                }
-//            }
-//            iv_action1.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    cancelOrder(mOrderId);
+                }
+            });
+        } else if (schedule.equals("11") || schedule.equals("1") ||schedule.equals("12") || schedule.equals("2")) {//撤单、录入快递单号
+            iv_action1.setVisibility(View.VISIBLE);
+            iv_action1.setImageResource(R.drawable.button1);
+            if(mOrderType==2){
+                if (mWorkOrder.getExpress() == null || mWorkOrder.getCourierNum() == null || mWorkOrder.getExpress().equals("") || mWorkOrder.getCourierNum().equals("")) {
+                    iv_action2.setVisibility(View.VISIBLE);
+                    iv_action2.setImageResource(R.drawable.button9);
+                }
+            }
+            iv_action1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    confirmCancelOrder(mOrderId);
 //                    iv_action1.setClickable(false);
-//                }
-//            });
-//            iv_action2.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent it = new Intent(mContext, input_courier_number_activity.class);
-//                    it.putExtra("jobOrderId", mOrderId);
-//                    startActivity(it);
-//                    iv_action2.setClickable(false);
-//
-//                }
-//            });
-//        }else if (schedule.equals("16")) { //   ---   确认收货
-//            iv_action2.setVisibility(View.VISIBLE);
-//            iv_action2.setImageResource(R.drawable.button14);
-//
-//            iv_action2.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    comfirmOrder(mOrderId);
-//                    iv_action2.setClickable(false);
-//                }
-//            });
-//        } else if (schedule.equals("7")) { //---  确认完成
-//            iv_action1.setVisibility(View.VISIBLE);
-//            iv_action1.setImageResource(R.drawable.button12);
-//            iv_action1.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    comfirmOrder(mOrderId);
+                }
+            });
+            iv_action2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent it = new Intent(mContext, input_courier_number_activity.class);
+                    it.putExtra("jobOrderId", mOrderId);
+                    startActivity(it);
+                    iv_action2.setClickable(false);
+                    getActivity().finish();
+
+                }
+            });
+        }else if (schedule.equals("16")) { //   ---   确认收货
+            iv_action2.setVisibility(View.VISIBLE);
+            iv_action2.setImageResource(R.drawable.button14);
+
+            iv_action2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    comfirmOrder(mOrderId);
+                    iv_action2.setClickable(false);
+                }
+            });
+        } else if (schedule.equals("7")) { //---  确认完成
+            iv_action1.setVisibility(View.VISIBLE);
+            iv_action1.setImageResource(R.drawable.button12);
+            iv_action1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    comfirmOrder(mOrderId);
+                    iv_action1.setClickable(false);
+                }
+            });
+        } else if (schedule.equals("5") ) { //--- 撤单
+            iv_action1.setVisibility(View.VISIBLE);
+            iv_action1.setImageResource(R.drawable.button1);
+            iv_action1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    confirmCancelOrder(mOrderId);
 //                    iv_action1.setClickable(false);
-//                }
-//            });
-//        } else if (schedule.equals("5") ) { //--- 撤单
-//            iv_action1.setVisibility(View.VISIBLE);
-//            iv_action1.setImageResource(R.drawable.button1);
-//            iv_action1.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    cancelOrder(mOrderId);
-//                    iv_action1.setClickable(false);
-//                }
-//            });
-//
-//        }else if (schedule.equals("13")) { //--- 撤单 录入快递号
-//            iv_action1.setVisibility(View.VISIBLE);
-//            iv_action1.setImageResource(R.drawable.button1);
-//            if(mOrderType==2){
-//                if (mWorkOrder.getExpress() == null || mWorkOrder.getCourierNum() == null || mWorkOrder.getExpress().equals("") || mWorkOrder.getCourierNum().equals("")) {
-//                    iv_action2.setVisibility(View.VISIBLE);
-//                    iv_action2.setImageResource(R.drawable.button9);
-//                }
-//            }
-//            iv_action1.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    closedOrder(mOrderId);
-//                    iv_action1.setClickable(false);
-//                }
-//            });
-//            iv_action2.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent it = new Intent(mContext, input_courier_number_activity.class);
-//                    it.putExtra("jobOrderId", mOrderId);
-//                    startActivity(it);
-//                    iv_action2.setClickable(false);
-//                }
-//            });
-//        }else if(schedule.equals("8")||schedule.equals("17")){
-//            iv_action2.setVisibility(View.VISIBLE);
-//            iv_action2.setImageResource(R.drawable.button15);
-//            iv_action2.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    //跳到评价页面
-//                    Intent intent = new Intent(mContext, input_evaluate_activity.class);
-//                    intent.putExtra("jobOrderId", mOrderId);
-//                    startActivity(intent);
-//                    iv_action2.setClickable(false);
-//                }
-//            });
-//        }
-//
-//    }
-//
-//    /* 2.2.7.确认收货*/
-//    protected void comfirmOrder(String jobOrder_id) {
-//        ServerApi.comfirmOrder(jobOrder_id, Preferences.getUserid(), new JsonHttpResponseHandler() {
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//                String ret_code = response.optString("ret_code");
-//                if (ret_code.equals("0")) {
-//                    Toast.makeText(mContext, "接单或者确认成功！", Toast.LENGTH_SHORT).show();
-//                    Intent i = new Intent(mContext, first_workorder_activity.class);
-//                    i.putExtra("state", "004");
-//                    startActivity(i);
-//                    getActivity().finish();
-//                } else {
-//                    String ret_msg = response.optString("ret_msg");
-//                    Toast.makeText(mContext, ret_msg, Toast.LENGTH_SHORT).show();
-//                    if (ret_code.equals("0011")) {
-//                        Intent intent = new Intent(mContext, LoginActivity.class);
-//                        startActivity(intent);
-//                        getActivity().finish();
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject obj) {
-//                Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String message, Throwable throwable) {
-//                Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-//
-//    /*撤单*/
-//    protected void cancelOrder(String orderid) {
-//        ServerApi.cancelOrder(orderid, new JsonHttpResponseHandler() {
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//                String ret_code = response.optString("ret_code");
-//                if (ret_code.equals("0")) {
-//                    Toast.makeText(mContext, "撤单成功！", Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(mContext, first_workorder_activity.class);
-//                    intent.putExtra("state", "001");
-//                    startActivity(intent);
-//                    getActivity().finish();
-//                } else if(ret_code.equals("100")){
-//                    String ret_msg = response.optString("ret_msg");
-//                    Toast.makeText(mContext, ret_msg, Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(mContext, first_workorder_activity.class);
-//                    intent.putExtra("state", "001");
-//                    startActivity(intent);
-//                    getActivity().finish();
-//                }else {
-//                    String ret_msg = response.optString("ret_msg");
-//                    Toast.makeText(mContext, ret_msg, Toast.LENGTH_SHORT).show();
-//                    if (ret_code.equals("0011")) {
-//                        Intent intent = new Intent(mContext, LoginActivity.class);
-//                        startActivity(intent);
-//                        getActivity().finish();
-//                    }
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject obj) {
-//                Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String message, Throwable throwable) {
-//                Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-//
-//    /*关闭工单*/
-//    protected void closedOrder(String orderid) {
-//        ServerApi.closeOrder(orderid, new JsonHttpResponseHandler() {
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//                String ret_code = response.optString("ret_code");
-//                if (ret_code.equals("0")) {
-//                    Toast.makeText(mContext, "关闭成功！", Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(mContext, first_workorder_activity.class);
-//                    intent.putExtra("state", "001");
-//                    startActivity(intent);
-//                    getActivity().finish();
-//                } else {
-//                    String ret_msg = response.optString("ret_msg");
-//                    Toast.makeText(mContext, ret_msg, Toast.LENGTH_SHORT).show();
-//                    if (ret_code.equals("0011")) {
-//                        Intent intent = new Intent(mContext, LoginActivity.class);
-//                        startActivity(intent);
-//                        getActivity().finish();
-//                    }
-//                }
-//            }
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject obj) {
-//                Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String message, Throwable throwable) {
-//                Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-//
-//    private void getOrderData() {
-//        ServerApi.getJobOrderDetails(mOrderId, new JsonHttpResponseHandler() {
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//                String ret_code = response.optString("ret_code");
-//
-//                if (ret_code.equals("0")) {
-//                    String json = response.toString();
-//                    LogUtil.e("SupplierListActivity", "ret_code==" + json);
-//
-//                    JSONObject jsonOb = response.optJSONObject("lists");
-//                    JSONObject jsonObj = jsonOb.optJSONObject("lists");
-//                    JSONObject jsonObj2 = jsonOb.optJSONObject("jobOrderDetail");
-//                    try {
-//                        mWorkOrder = new workOrder();
-//                        mWorkOrder.setJobNum(jsonObj.getString("jobNum"));//工单号
-//                        mWorkOrder.setBankName(jsonObj.getString("bankName"));
-//                        if (jsonObj2.has("courierNum") && !StringUtil.isEmpty(jsonObj2.getString("courierNum"))) {
+                }
+            });
+
+        }else if (schedule.equals("13")) { //--- 撤单 录入快递号
+            iv_action1.setVisibility(View.VISIBLE);
+            iv_action1.setImageResource(R.drawable.button1);
+            if(mOrderType==2){
+                if (mWorkOrder.getExpress() == null || mWorkOrder.getCourierNum() == null || mWorkOrder.getExpress().equals("") || mWorkOrder.getCourierNum().equals("")) {
+                    iv_action2.setVisibility(View.VISIBLE);
+                    iv_action2.setImageResource(R.drawable.button9);
+                }
+            }
+            iv_action1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    EasyAlertDialogHelper.createOkCancelDiolag(mContext, mContext.getString(R.string.helps), mContext.getString(R.string.confirm_close_order),
+                            mContext.getString(R.string.close_order), mContext.getString(R.string.cancel), true, new EasyAlertDialogHelper.OnDialogActionListener() {
+                                @Override
+                                public void doCancelAction() {
+                                    //什么都不做
+                                }
+
+                                @Override
+                                public void doOkAction() {
+                                    closedOrder(mOrderId);
+                                    iv_action1.setClickable(false);
+                                }
+                            }).show();
+                }
+            });
+            iv_action2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent it = new Intent(mContext, input_courier_number_activity.class);
+                    it.putExtra("jobOrderId", mOrderId);
+                    startActivity(it);
+                    iv_action2.setClickable(false);
+                    getActivity().finish();
+                }
+            });
+        }else if(schedule.equals("8")||schedule.equals("17")){
+            iv_action2.setVisibility(View.VISIBLE);
+            iv_action2.setImageResource(R.drawable.button15);
+            iv_action2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //跳到评价页面
+                    Intent intent = new Intent(mContext, input_evaluate_activity.class);
+                    intent.putExtra("jobOrderId", mOrderId);
+                    startActivity(intent);
+                    iv_action2.setClickable(false);
+                    getActivity().finish();
+                }
+            });
+        }
+
+        if(iv_action1.getVisibility()==View.GONE && iv_action2.getVisibility()==View.GONE){
+            //如果没有button 隐藏底部的line
+            tv_buttomLine.setVisibility(View.GONE);
+        }
+
+    }
+
+    /* 2.2.7.确认收货*/
+    protected void comfirmOrder(String jobOrder_id) {
+        ServerApi.comfirmOrder(jobOrder_id, Preferences.getUserid(), new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String ret_code = response.optString("ret_code");
+                if (ret_code.equals("0")) {
+                    Toast.makeText(mContext, "接单或者确认成功！", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(mContext, first_workorder_activity.class);
+                    i.putExtra("state", "004");
+                    startActivity(i);
+                    getActivity().finish();
+                } else {
+                    String ret_msg = response.optString("ret_msg");
+                    Toast.makeText(mContext, ret_msg, Toast.LENGTH_SHORT).show();
+                    if (ret_code.equals("0011")) {
+                        Intent intent = new Intent(mContext, LoginActivity.class);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject obj) {
+                Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String message, Throwable throwable) {
+                Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**撤单确认dialog
+     * @param orderid
+     */
+    protected void confirmCancelOrder(final String orderid) {
+        EasyAlertDialogHelper.createOkCancelDiolag(mContext, mContext.getString(R.string.helps), mContext.getString(R.string.confirm_cancle_order),
+                mContext.getString(R.string.cancle_order),mContext.getString(R.string.cancel),  true, new EasyAlertDialogHelper.OnDialogActionListener() {
+                    @Override
+                    public void doCancelAction() {
+//                        iv_action1.setClickable(true);
+                    }
+
+                    @Override
+                    public void doOkAction() {
+                        cancelOrder(orderid);
+                        iv_action1.setClickable(false);
+                    }
+                }).show();
+    }
+
+
+    /*撤单*/
+    protected void cancelOrder(String orderid) {
+        ServerApi.cancelOrder(orderid, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String ret_code = response.optString("ret_code");
+                if (ret_code.equals("0")) {
+                    Toast.makeText(mContext, "撤单成功！", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(mContext, first_workorder_activity.class);
+                    intent.putExtra("state", "001");
+                    startActivity(intent);
+                    getActivity().finish();
+                } else if(ret_code.equals("100")){
+                    String ret_msg = response.optString("ret_msg");
+                    Toast.makeText(mContext, ret_msg, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(mContext, first_workorder_activity.class);
+                    intent.putExtra("state", "001");
+                    startActivity(intent);
+                    getActivity().finish();
+                }else {
+                    String ret_msg = response.optString("ret_msg");
+                    Toast.makeText(mContext, ret_msg, Toast.LENGTH_SHORT).show();
+                    if (ret_code.equals("0011")) {
+                        Intent intent = new Intent(mContext, LoginActivity.class);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject obj) {
+                Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String message, Throwable throwable) {
+                Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /*关闭工单*/
+    protected void closedOrder(String orderid) {
+        ServerApi.closeOrder(orderid, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String ret_code = response.optString("ret_code");
+                if (ret_code.equals("0")) {
+                    Toast.makeText(mContext, "关闭成功！", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(mContext, first_workorder_activity.class);
+                    intent.putExtra("state", "001");
+                    startActivity(intent);
+                    getActivity().finish();
+                } else {
+                    String ret_msg = response.optString("ret_msg");
+                    Toast.makeText(mContext, ret_msg, Toast.LENGTH_SHORT).show();
+                    if (ret_code.equals("0011")) {
+                        Intent intent = new Intent(mContext, LoginActivity.class);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject obj) {
+                Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String message, Throwable throwable) {
+                Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getOrderData() {
+        ServerApi.getJobOrderDetails(mOrderId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                String ret_code = response.optString("ret_code");
+
+                if (ret_code.equals("0")) {
+                    String json = response.toString();
+                    LogUtil.e("SupplierListActivity", "ret_code==" + json);
+
+                    JSONObject jsonOb = response.optJSONObject("lists");
+                    JSONObject jsonObj = jsonOb.optJSONObject("lists");
+                    JSONObject jsonObj2 = jsonOb.optJSONObject("jobOrderDetail");
+                    try {
+                        mWorkOrder = new workOrder();
+                        mWorkOrder.setJobNum(jsonObj.getString("jobNum"));//工单号
+                        mWorkOrder.setBankName(jsonObj.getString("bankName"));
+                        if (jsonObj2.has("courierNum") && !StringUtil.isEmpty(jsonObj2.getString("courierNum"))) {
 //                            tv_express.setText(jsonObj2.getString("express"));//快递公司
 //                            tv_courierNum.setText(jsonObj2.getString("courierNum"));//快递单号
-//                            mWorkOrder.setExpress(jsonObj2.getString("express"));
-//                            mWorkOrder.setCourierNum(jsonObj2.getString("courierNum"));
-//                            ll_express.setVisibility(View.VISIBLE);
-//                        }
-//                        if (jsonObj2.has("evaluate")) {
-//                            tv_evaluate.setText(jsonObj2.getString("evaluate"));//工单号
-//                            switch (jsonObj2.getInt("starLevel")) {
-//                                case 1:
-//                                    star1.setImageResource(R.drawable.star2);
-//                                    star2.setImageResource(R.drawable.star1);
-//                                    star3.setImageResource(R.drawable.star1);
-//                                    star4.setImageResource(R.drawable.star1);
-//                                    star5.setImageResource(R.drawable.star1);
-//                                    break;
-//                                case 2:
-//                                    star1.setImageResource(R.drawable.star2);
-//                                    star2.setImageResource(R.drawable.star2);
-//                                    star3.setImageResource(R.drawable.star1);
-//                                    star4.setImageResource(R.drawable.star1);
-//                                    star5.setImageResource(R.drawable.star1);
-//                                    break;
-//                                case 3:
-//                                    star1.setImageResource(R.drawable.star2);
-//                                    star2.setImageResource(R.drawable.star2);
-//                                    star3.setImageResource(R.drawable.star2);
-//                                    star4.setImageResource(R.drawable.star1);
-//                                    star5.setImageResource(R.drawable.star1);
-//                                    break;
-//                                case 4:
-//                                    star1.setImageResource(R.drawable.star2);
-//                                    star2.setImageResource(R.drawable.star2);
-//                                    star3.setImageResource(R.drawable.star2);
-//                                    star4.setImageResource(R.drawable.star2);
-//                                    star5.setImageResource(R.drawable.star1);
-//                                    break;
-//                                case 5:
-//                                    star1.setImageResource(R.drawable.star2);
-//                                    star2.setImageResource(R.drawable.star2);
-//                                    star3.setImageResource(R.drawable.star2);
-//                                    star4.setImageResource(R.drawable.star2);
-//                                    star5.setImageResource(R.drawable.star2);
-//                                    break;
-//                            }
-//
-//                            ll_evaluate.setVisibility(View.VISIBLE);
-//                        }
-//
-//                        String picUrls = jsonObj.getString("imgSerialNum");
-//                        mWorkOrder.setSupName(jsonObj.getString("supName"));
-//                        mWorkOrder.setDeviceName(jsonObj.getString("deviceName"));
-//                        mWorkOrder.setDmName(jsonObj.getString("dmName"));
-//                        mWorkOrder.setRemark(jsonObj.getString("remark"));
-//                        mWorkOrder.setSituation("故障情况：  " + jsonObj.getString("situation"));
-//                        mOrderType = jsonObj2.getInt("type");
-//                        if (mOrderType == 1) {
-//                            ll_contact_address.setVisibility(View.GONE);
-//                            tv_line.setVisibility(View.GONE);
-//                        }
-//                        if (jsonObj2.has("comAddress")) {
-//                            tv_contact_address.setText(jsonObj2.getString("comAddress"));
-//                        }
-//                        if (jsonObj.has("execution")) {
-//                            ll_complete.setVisibility(View.VISIBLE);
-//                            tv_complete.setText(jsonObj.getString("execution"));
-//                        }
-//                        if (jsonObj.has("imageStr")) {
-//
-//                            String picUrl2s = jsonObj.getString("imageStr");
-//                            String[] arrs = picUrl2s.split(",");
-//                            showPicture(arrs, iv_picturecompletes);
-//                        }
-//                        if (jsonObj2.has("voice")) {
-//                            voiceUrl = jsonObj2.getString("voice");
-//                            if(!voiceUrl.equals("")){
-//                                //tweet_layout_record.setVisibility(View.VISIBLE);
-//                            }
-//                        }
-//
-//                        String[] arrs = picUrls.split(",");
-//                        //showPicture(arrs, iv_pictures);
-//                        EventBus.getDefault().post(new EventLatLng(mWorkOrder,arrs,voiceUrl));
-//                        tv_therepair_name.setText(jsonObj.getString("userName"));
-//                        tv_contact_phone.setText(jsonObj.getString("phone"));
-//                        String schedule = jsonObj.getString("schedule");
-//                        String state = jsonObj.getString("state");
-//                        setButtons( schedule);
-//                        getTrackingData();
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                } else {
-//                    String ret_msg = response.optString("ret_msg");
-//                    Toast.makeText(mContext, ret_msg, Toast.LENGTH_SHORT).show();
-//                    if (ret_code.equals("0011")) {
-//                        Intent intent = new Intent(mContext, LoginActivity.class);
-//                        startActivity(intent);
-//                        getActivity().finish();
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject obj) {
-//                Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String message, Throwable throwable) {
-//                Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
+                            mWorkOrder.setExpress(jsonObj2.getString("express"));
+                            mWorkOrder.setCourierNum(jsonObj2.getString("courierNum"));
+                        }
+                        String schedule = jsonObj.getString("schedule");
+                        String state = jsonObj.getString("state");
+                        setButtons( schedule);
+                        //getTrackingData();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    String ret_msg = response.optString("ret_msg");
+                    Toast.makeText(mContext, ret_msg, Toast.LENGTH_SHORT).show();
+                    if (ret_code.equals("0011")) {
+                        Intent intent = new Intent(mContext, LoginActivity.class);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject obj) {
+                Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String message, Throwable throwable) {
+                Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     //工单跟踪
     private void getTrackingData() {
@@ -612,7 +579,7 @@ public class OrderStateFragment extends Fragment {
     class ViewHolder {
         TextView tv_content, tv_express, tv_time,tv_SignAddress;
         MapView mv_map;
-        View lineOne,lineTwo;
+        View lineOne,lineTwo, line_buttom;
         ImageView ivHeadPoint;
     }
 
@@ -655,6 +622,7 @@ public class OrderStateFragment extends Fragment {
                 vHolder.ivHeadPoint = (ImageView) convertView.findViewById(R.id.head_point);
                 vHolder.lineOne = convertView.findViewById(R.id.head_line_one);
                 vHolder.lineTwo = convertView.findViewById(R.id.head_line_two);
+                vHolder.line_buttom = convertView.findViewById(R.id.view_line_buttom);
                 convertView.setTag(vHolder);
             } else {
                 vHolder = (ViewHolder) convertView.getTag();
@@ -716,8 +684,10 @@ public class OrderStateFragment extends Fragment {
             vHolder.tv_content.setText(Html.fromHtml(datas.get(position).getContent()));
             if(position==getCount()-1){
                 vHolder.lineTwo.setVisibility(View.INVISIBLE);
+                vHolder.line_buttom.setVisibility(View.GONE);
             }else{
                 vHolder.lineTwo.setVisibility(View.VISIBLE);
+                vHolder.line_buttom.setVisibility(View.VISIBLE);
             }
             if(position==0){
                 vHolder.lineOne.setVisibility(View.INVISIBLE);

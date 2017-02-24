@@ -187,23 +187,11 @@ public class MessageFragment extends TFragment implements ModuleProxy {
         LogUtil.i(TAG, "权限结果回调。。。  权限名字= " + permissions[0].toString());
         switch(requestCode) {
             case PermissionUtils.CODE_RECORD_AUDIO:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ContextCompat.checkSelfPermission(getActivity(), PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE) ==
-                            PackageManager.PERMISSION_DENIED) {
-                        PermissionUtils.confirmActivityPermission(getActivity(), new String[]{PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE},
-                                PermissionUtils.CODE_RECORD_AUDIO, getString(R.string.readSDcard), false);
-                    } else {//开始录音
-//                        inputPanel.startRecordAudio();
-                    }
-                } else {
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(getActivity(), PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE) ==
                             PackageManager.PERMISSION_DENIED) {
                         //重新申请 sd 录音权限
-                        PermissionUtils.confirmActivityPermission(getActivity(), permissions, PermissionUtils.CODE_RECORD_AUDIO, getString(R.string.recordAudio), false);
-                    } else {
-                        //只申请  录音权限
-                        PermissionUtils.confirmActivityPermission(getActivity(), new String[]{PermissionUtils.PERMISSION_RECORD_AUDIO},
-                                PermissionUtils.CODE_RECORD_AUDIO, getString(R.string.recordAudio), false);
+                        PermissionUtils.confirmFragmentPermission(this, permissions, PermissionUtils.CODE_RECORD_AUDIO, getString(R.string.recordAudio));
                     }
                 }
                 break;

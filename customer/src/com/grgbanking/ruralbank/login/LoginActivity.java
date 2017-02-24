@@ -100,25 +100,11 @@ public class LoginActivity extends UI implements OnKeyListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
-
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            if(PermissionUtils.lacksPermissions(this, PermissionUtils.requestPermissions)){
-//                List<String> requestPermission = new ArrayList<String>();
-//                for(String permission : PermissionUtils.requestPermissions){
-//                    if(PermissionUtils.lacksPermission(this, permission)){
-//                        requestPermission.add(permission);
-//                    }
-//                }
-//                ActivityCompat.requestPermissions(this,
-//                        requestPermission.toArray(new String[requestPermission.size()]), 1001); // 请求权限
-//                requestPermission.clear();
-//            }
-//        }
         if (Build.VERSION.SDK_INT >= 23) {
             if (PermissionUtils.lacksPermission(this, PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE)) {
-                //缺少必要权限 不让用户登陆
+                //缺少必要sd权限 不让用户登陆
                 ActivityCompat.requestPermissions(this,
-                        new String[]{PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE}, PermissionUtils.CODE_READ_EXTERNAL_STORAGE); // 请求权限
+                        new String[]{PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE}, PermissionUtils.CODE_READ_EXTERNAL_STORAGE);
                 isShowDialog = true;
             }
         }
@@ -142,9 +128,7 @@ public class LoginActivity extends UI implements OnKeyListener {
             case PermissionUtils.CODE_READ_EXTERNAL_STORAGE:
                 isShowDialog = false;
                 if(grantResults.length >=1) {
-                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    } else {
+                    if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                         if (ActivityCompat.shouldShowRequestPermissionRationale(this
                                 , permissions[0])) {//点击拒绝，再次弹出
                             ActivityCompat.requestPermissions(this, permissions, PermissionUtils.CODE_READ_EXTERNAL_STORAGE);
@@ -190,16 +174,31 @@ public class LoginActivity extends UI implements OnKeyListener {
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //判断是否有sd权限 否则不让登陆
+        boolean b = ActivityCompat.shouldShowRequestPermissionRationale(this
+                , PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE );
+        Log.i("jiang", "onResume" + "运行  222" + b  + " isshowdialog = " + isShowDialog);
+        if(!isShowDialog && Build.VERSION.SDK_INT >= 23 && !b && PermissionUtils.lacksPermission(this, PermissionUtils.PERMISSION_WRITE_EXTERNAL_STORAGE)){
+            //弹出对话框 授权;
+            showDialogPermission();
+            Log.i("jiang", "onResume" + "在手授权");
+        }
+
+    }
+
     private  void showDialogPermission() {
         isShowDialog = true;
-        Log.e("jianglu", "马上显示dialog");
+        Log.i("jianglu", "马上显示dialog");
         EasyAlertDialogHelper.createOkCancelDiolag(this, getString(R.string.helps),
                 getString(R.string.readSDcard) + getString(R.string.string_help_text),
                 getString(R.string.settings), getString(R.string.quit_apk), true, new EasyAlertDialogHelper.OnDialogActionListener() {
                     @Override
                     public void doCancelAction() {
                         //返回上一个界面;
-                        Log.e("jianglu", "马上返回上一个界面 退出应用了");
+                        Log.i("jianglu", "马上返回上一个界面 退出应用了");
                         isShowDialog = false;
                         finish();
                     }
@@ -213,7 +212,7 @@ public class LoginActivity extends UI implements OnKeyListener {
                         startActivity(intent);
                     }
                 }).show();
-    }
+     }
 
     /**
      * 登录面板

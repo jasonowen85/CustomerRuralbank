@@ -92,6 +92,7 @@
             android:visibility="gone" />
 
         <View
+            android:id="@+id/view_line_buttom"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/content"

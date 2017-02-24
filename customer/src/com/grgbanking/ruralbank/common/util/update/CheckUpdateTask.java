@@ -81,7 +81,8 @@ class CheckUpdateTask extends AsyncTask<Void, Void, String> {
                         showDialog(mContext, updateMessage, apkUrl);
                     }
                 } else if (mShowProgressDialog) {
-                    Toast.makeText(mContext, mContext.getString(R.string.android_auto_update_toast_no_new_update), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, mContext.getString(R.string.android_auto_update_toast_no_new_update)
+                            + "  " +versionCode, Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (JSONException e) {
